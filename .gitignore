@@ -1,0 +1,13 @@
+node_modules/
+dist/
+release/
+coverage/
+.DS_Store
+.env
+.env.*
+!.env.example
+credentials/
+*credentials*.json
+*secret*.json
+*backup*.json
+*.local.json

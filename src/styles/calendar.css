@@ -1,0 +1,50 @@
+.sidebar{overflow-y:auto;scrollbar-width:thin}
+.sidebar>*{flex-shrink:0}
+.posting-calendar{margin:20px 6px 0;padding-top:14px;border-top:1px solid var(--line);min-width:0}
+.calendar-heading{display:flex;align-items:center;justify-content:space-between;padding:0 3px;font-size:11px;font-weight:550;color:var(--ink)}
+.calendar-nav{display:flex;align-items:center;justify-content:space-between;gap:1px;margin:4px 0 7px}
+.calendar-nav button{padding:3px;border-radius:4px;color:var(--muted);font-size:15px;min-width:22px;min-height:26px}
+.calendar-nav button:hover{background:var(--sidebar);color:var(--ink)}
+.calendar-nav #calendar-month{flex:1;min-width:0;font-size:10px;font-weight:500;color:var(--muted);white-space:nowrap}
+.calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;padding:2px}
+.calendar-weekdays{margin-bottom:5px;text-align:center;font-size:8px;line-height:1;color:var(--muted)}
+.calendar-day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;min-width:0;height:32px;padding:3px 0;font-size:10px;line-height:1;color:var(--muted);border-radius:4px;user-select:none}
+.calendar-empty{height:32px}
+.calendar-date{font-variant-numeric:tabular-nums}
+.calendar-tick-space{height:10px}
+.calendar-day.has-post{background:#fbefea;color:#a64c39;font-weight:600}
+.calendar-day.has-post:hover{background:#f7dfd6}
+.calendar-day.has-scheduled:not(.has-post){background:#eaf1fa;color:#3c6891}
+.calendar-day.has-scheduled:not(.has-post):hover{background:#dce9f8}
+.calendar-day-icons{display:flex;align-items:center;justify-content:center;gap:1px;height:10px}
+.calendar-day.has-scheduled .calendar-clock{color:#3c6891}
+.calendar-day svg{width:10px;height:10px;stroke-width:1.7}
+.calendar-day.is-today{outline:1px solid var(--accent);outline-offset:0}
+.calendar-day.is-future:not(.has-scheduled){opacity:.5}
+.calendar-legend{display:flex;gap:10px;align-items:center;margin:9px 3px 0;color:var(--muted);font-size:8px}
+.calendar-legend span{display:inline-flex;align-items:center;gap:3px}
+.calendar-legend svg{width:10px;height:10px}
+.calendar-schedule-time{display:flex!important;align-items:center;gap:4px;color:#3c6891!important}
+.calendar-schedule-time svg{width:11px;height:11px;flex:none}
+.calendar-source{display:block;margin:8px 3px 0;font-size:9px;color:var(--muted);white-space:nowrap;cursor:help}
+.calendar-refresh{display:grid;place-items:center;width:23px;height:23px;border-radius:4px;color:var(--muted);padding:0}
+.calendar-refresh svg{width:13px;height:13px}
+.calendar-refresh:hover{background:var(--sidebar);color:var(--ink)}
+.calendar-refresh:disabled{opacity:.4;cursor:default}
+.calendar-popover{position:fixed;z-index:60;width:min(310px,calc(100vw - 24px));max-height:min(340px,calc(100dvh - 24px));overflow-y:auto;padding:13px;background:var(--surface,var(--paper));color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 32px #0002}
+.calendar-popover-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;font-size:11px;font-weight:600;margin-bottom:8px}
+.calendar-popover-heading>span{font-size:9px;color:var(--muted);font-weight:400}
+.calendar-video{display:flex;gap:10px;align-items:center;padding:9px 0;text-decoration:none;font-size:12px;line-height:1.5;border-top:1px solid var(--line)}
+.calendar-video:hover>span{text-decoration:underline;text-underline-offset:3px}
+.calendar-video img{width:80px;height:45px;object-fit:cover;border-radius:4px;flex:none}
+.calendar-video small{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.calendar-popover-note{font-size:9px;line-height:1.6;color:var(--muted);margin:8px 0 0;border-top:1px solid var(--line);padding-top:8px}
+:root[data-theme="dark"] .calendar-day.has-post{background:#3b2a25;color:#f2ac98}
+:root[data-theme="dark"] .calendar-day.has-post:hover{background:#503329}
+:root[data-theme="dark"] .calendar-day.has-scheduled:not(.has-post){background:#253447;color:#afcaeb}
+:root[data-theme="dark"] .calendar-day.has-scheduled:not(.has-post):hover{background:#30445d}
+:root[data-theme="dark"] .calendar-day.has-scheduled .calendar-clock{color:#afcaeb}
+:root[data-theme="dark"] .calendar-schedule-time{color:#afcaeb!important}
+:root[data-theme="dark"] .calendar-popover{box-shadow:0 8px 32px #0006}
+.sidebar-footer{padding-top:20px}
+@media(min-width:721px) and (max-width:1100px){.posting-calendar{margin-left:0;margin-right:0}.calendar-weekdays{font-size:7.5px}}

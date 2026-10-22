@@ -1,0 +1,14 @@
+.themes-label{display:flex;align-items:center;justify-content:space-between}.themes-label button{font-size:18px;color:var(--muted);padding:0 3px;line-height:1}
+.demo-notice{display:flex;align-items:center;gap:9px;margin-top:22px;padding:10px 12px;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:6px;background:var(--sidebar)}
+.demo-notice button{margin-left:auto;white-space:nowrap;font-size:11px;color:var(--ink);text-decoration:underline;text-underline-offset:3px}.demo-dot{height:5px;width:5px;background:var(--accent);border-radius:50%;flex:none}
+.empty-board{margin:30px 0;padding:55px 20px;border:1px dashed var(--line);border-radius:8px;text-align:center}.empty-board h2{font-size:22px;font-weight:600;letter-spacing:-.5px;margin:0 0 8px}.empty-board p{color:var(--muted);font-size:12px;margin:0 0 20px}
+.text-danger{color:#a64c39;font-size:11px;padding:3px 0}.text-danger:hover{text-decoration:underline}.text-danger:disabled{opacity:.4;cursor:default;text-decoration:none}
+.dialog-left{display:flex;gap:13px;align-items:center}.theme-edit{font-size:11px;color:var(--muted);padding:3px 5px;border-radius:3px}.theme-edit:hover{background:var(--sidebar);color:var(--ink)}
+.theme-heading-top .theme-add{margin-left:auto}.theme-heading-top .theme-name{max-width:75%;overflow-wrap:anywhere}.theme-heading-top{flex-wrap:wrap}
+#theme-color{width:50px;height:32px;padding:2px;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+.yt-panel code{font-size:10px;overflow-wrap:anywhere}.yt-panel>.yt-input{font-size:12px}.selection-check{flex-wrap:wrap}.selection-check input{flex:none}
+.yt-metrics:empty{display:none}.demo-badge{font-size:8px;color:var(--muted);font-weight:400;margin-left:4px}
+:root[data-theme="dark"] .text-danger{color:#f2ac98}
+@media(max-width:720px){.demo-notice{align-items:flex-start;font-size:10px}.dialog-left{gap:9px}.dialog-footer{flex-wrap:wrap}.board-footnote .text-danger{margin-top:9px}}
+
+.connection-fields{border:0;padding:0;margin:0;min-width:0}.connection-fields:disabled{opacity:.6}.sidebar{overflow-y:auto}.theme-name{margin:0}.btn:disabled,button:disabled{cursor:default;opacity:.45}.privacy-document{max-width:760px;padding:40px 24px;margin:auto;font-size:15px;line-height:1.8}.privacy-document h1{margin:25px 0}.privacy-document h2{font-size:20px;margin-top:30px}.privacy-document footer{margin-top:30px;border-top:1px solid var(--line);padding-top:20px}.calendar-popover{max-height:50dvh;overflow-y:auto}.calendar-popover-heading button{margin-left:auto}.theme-nav .nav-item{overflow-wrap:anywhere}.save-error button{text-decoration:underline;margin-left:10px}
