@@ -2,6 +2,8 @@
 
 A local-first **Vue 3 single-page application** for planning content by theme. Uses Vue Router, Vite, Dexie/IndexedDB, Vitest and Vue Test Utils. The YouTube integration is optional; no backend or shared developer credentials are included.
 
+[Use Cueboard](https://abhishek325.github.io/Cueboard/) · [Getting started](https://abhishek325.github.io/Cueboard/guide/) · [Privacy](https://abhishek325.github.io/Cueboard/privacy/)
+
 ## Develop
 
 Use Node.js **22.22.2 or newer** (tested on 22.22.2). `.nvmrc` pins the tested runtime.
@@ -101,7 +103,7 @@ A channel selection must match the signed-in channel. If Google returns multiple
 
 ## GitHub Pages branch deployment
 
-`main` holds source code. `gh-pages` holds only the generated production site (`index.html`, compiled assets and `.nojekyll`). Browser data, API keys, tests, dependencies and source files are never copied to the hosting branch.
+`main` holds source code. `gh-pages` holds only the generated production site (HTML, compiled assets, discovery files and `.nojekyll`). Browser data, API keys, tests, dependencies and source files are never copied to the hosting branch.
 
 To create or update the build branch from an authenticated local checkout:
 
@@ -141,9 +143,31 @@ src/
   views/          Board and lazily loaded Data use page
   styles/         Shared responsive light/dark appearance
 scripts/package.mjs  Sanitized source/deployment packaging
+site/discovery.mjs   Static public content, metadata, structured data and sitemap
 ```
 
 Vue owns rendering and events; no legacy global UI scripts or direct `innerHTML` rendering remain. The repository owns persistence, and the API client receives credentials in memory. No Pinia store or server is needed for this single-workspace app.
+
+## Search and AI discovery
+
+The production response includes a visible product overview in the initial HTML, not just a JavaScript app shell. `/guide/` and `/privacy/` are real static pages with ordinary links, unique titles/descriptions and matching canonical/Open Graph URLs. Each works without JavaScript. The board stays at its existing hash URL and keeps the same IndexedDB database; no personal content is included in the public HTML. The app container is excluded from Google snippets with `data-nosnippet`.
+
+`site/discovery.mjs` is the source for public copy, JSON-LD (`WebSite`, `WebPage`, `WebApplication`), the three-page sitemap and a factual `llms.txt` summary. No invented ratings, reviews or audience claims are included. Structured data does not guarantee rich results, rankings or AI citations. `llms.txt` is optional experimental documentation: Google does not require it for AI features, and it is not a crawler permission control.
+
+The default canonical URL is `https://abhishek325.github.io/Cueboard/`. For another deployment, set `SITE_URL=https://example.com/planner/` when building. This changes canonical, schema, social-image and sitemap URLs together. Change repository links in `site/discovery.mjs` when forking. Static sharing assets live in `public/`; `scripts/create-social-card.py` can recreate the PNGs with Pillow (macOS Arial fonts, optional, not part of the build).
+
+### Indexing and measurement after deployment
+
+1. In [Google Search Console](https://search.google.com/search-console), verify a **URL-prefix property** for the exact `https://abhishek325.github.io/Cueboard/` URL. Use Google's HTML-file verification method by adding the issued file to `public/`, or add its issued verification meta tag to the HTML. Do not invent a verification token. A domain property would require DNS control of `github.io`, which this repository does not have.
+2. Submit `https://abhishek325.github.io/Cueboard/sitemap.xml`; inspect the homepage and guide and request indexing. Do not list `#/privacy` or other fragments as separate sitemap URLs. Add the same URL-prefix site to [Bing Webmaster Tools](https://www.bing.com/webmasters/) and submit the sitemap there, or import the verified Google property when available.
+3. Track actual indexing, queries, impressions and clicks in those consoles. They are not configured by this code change. No analytics/advertising tracker was added. Search appearance and AI citations are not guaranteed and no numerical traffic uplift is asserted.
+4. Link the product naturally from your GitHub profile and relevant owned content when you choose to promote it. Publish additional guides only when they answer actual creator problems; avoid keyword stuffing, duplicate thin pages or automated link spam.
+
+**robots.txt limitation:** crawlers read `https://abhishek325.github.io/robots.txt`, not `/Cueboard/robots.txt`. This project cannot change that host-root file without changing a separate root site. No ineffective project-path robots file is shipped. In the absence of a blocking host policy, crawling is allowed by default. An owner-controlled root site or custom domain could publish a root `robots.txt` with the sitemap location and crawler choices. `OAI-SearchBot` concerns ChatGPT search; `GPTBot` concerns potential training use. Allowing training is not required for search visibility. Do not claim either permission is configured merely because metadata or `llms.txt` exists.
+
+The current app is operated on GitHub Pages with enforced HTTPS. No custom domain, host-root policy, Google/Bing verification, third-party tracking or indexing-service account is created by the application. Semantic headings, labelled controls and native inputs also help browser agents operate the existing board; there is no public API that exposes private board data or grants agents new access.
+
+References: [Google JavaScript SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics), [Google AI search guidance](https://developers.google.com/search/docs/appearance/ai-features), [robots.txt location](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt), [OpenAI crawler roles](https://developers.openai.com/api/docs/bots).
 
 ## Verification and limits
 

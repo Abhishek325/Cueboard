@@ -1,3 +1,4 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-export default defineConfig({ plugins: [vue()], base: './', build: { sourcemap: false } });
+import { discoveryPlugin } from './site/discovery.mjs';
+export default defineConfig({ plugins: [vue(), discoveryPlugin()], base: './', build: { sourcemap: false } });
