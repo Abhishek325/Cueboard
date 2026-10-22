@@ -5,7 +5,8 @@
 Plan video ideas by editable themes, track progress and keep completed work below a shared divider. Optional YouTube integration adds a posting calendar and read-only video metrics. Planning requires no Cueboard account or API key.
 
 ## Pages
-- [Content board and product overview](https://abhishek325.github.io/Cueboard/): Planner, features and common questions.
+- [Content board](https://abhishek325.github.io/Cueboard/): Planner with a small About link and product-information dialog.
+- [About Cueboard](https://abhishek325.github.io/Cueboard/about/): Features and common questions, readable without JavaScript.
 - [Getting started](https://abhishek325.github.io/Cueboard/guide/): Themes, idea details, progress, backups and optional YouTube setup.
 - [Privacy and data](https://abhishek325.github.io/Cueboard/privacy/): Browser storage, backup contents, Google permissions and deletion.
 - [Source and setup](https://github.com/Abhishek325/Cueboard): Vue, Dexie, Vite, testing and deployment documentation.
