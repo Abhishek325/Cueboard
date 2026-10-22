@@ -24,6 +24,7 @@ Open <http://127.0.0.1:8775/>. The previous Python server and opening `index.htm
 | `npm run preview` | Serve the production build locally on 8776 |
 | `npm run check` | Tests, then production build |
 | `npm run package` | Tests/build, then source and deployment ZIPs in `release/` |
+| `npm run deploy:pages` | Tests/build, then publishes only `dist/` to `gh-pages` using your Git credentials |
 
 `npm ci` uses the committed lockfile. Do not commit `node_modules/`, `dist/`, `release/`, credentials, environment files or personal JSON backups. The source package has an explicit file allowlist, refuses symlinks and checks for common credential formats. Build artifacts contain application code and generic examples only, never browser data.
 
@@ -98,15 +99,35 @@ A channel selection must match the signed-in channel. If Google returns multiple
 - Clearing the browser's site data removes board content and connection settings. Export a board backup first. IndexedDB belongs to an origin, not a URL path; projects hosted under the same GitHub Pages origin can share this storage namespace. Use a separate hostname or change `DATABASE_NAME` in `src/services/database.js` if isolation is needed.
 - No app server receives content, keys or reports. Hosting providers still handle page requests. Google receives API/sign-in requests and YouTube thumbnails load from Google when a calendar preview is opened. See [data use](#/privacy).
 
-## GitHub and deployment
+## GitHub Pages branch deployment
 
-1. Create a repository and upload/push **this folder's source contents** to its root, including `package-lock.json`, `.nvmrc` and `.github`. Do not upload the parent project or personal board.
-2. The CI workflow runs tests/build/package on pushes and pull requests and uploads the ZIPs as artifacts. CI does not deploy.
-3. To publish with GitHub Pages, set Settings > Pages > Source to **GitHub Actions**, then manually run **Deploy Pages (manual)** on the default branch. That workflow tests/builds and deploys only `dist/`.
-4. Hash-based routing (`/#/`, `/#/privacy`) and relative asset paths allow repository subdirectory hosting without a server rewrite or repository-name placeholder. Custom hosts can also serve the contents of `dist/` over HTTPS.
-5. Update Google API key referrer restrictions and OAuth JavaScript origins for the actual domain. Your local data does not move to the deployed origin automatically.
+`main` holds source code. `gh-pages` holds only the generated production site (`index.html`, compiled assets and `.nojekyll`). Browser data, API keys, tests, dependencies and source files are never copied to the hosting branch.
 
-This preparation does not publish the app or create a repository. Select a license before offering reuse under specific terms. A shared deployment/OAuth app operator should provide their contact/privacy information in the Cloud consent screen and adapt the included Data use page.
+To create or update the build branch from an authenticated local checkout:
+
+```sh
+npm ci
+npm run deploy:pages
+```
+
+The command runs tests and a production build before pushing `dist/` to `origin/gh-pages`. It preserves the branch history and leaves your checkout on `main`. Review and commit source changes before publishing them. Updating `main` alone does not update the hosted build; run the command for each release. Application CI excludes `gh-pages` because generated assets have no npm project.
+
+### Enable hosting
+
+Once your GitHub account/repository supports Pages:
+
+1. Open repository Settings > Pages.
+2. Set Source to **Deploy from a branch**.
+3. Choose **gh-pages**, folder **/(root)**, then Save.
+4. GitHub builds/deploys that branch. Use the site URL shown by GitHub once deployment succeeds.
+
+**Private repositories require a GitHub plan that includes private-repository Pages.** If Settings displays “Upgrade or make this repository public to enable Pages”, creating the branch cannot enable hosting. The repository owner must upgrade their plan or explicitly choose public repository visibility; the publishing command does neither. Standard Pages sites are publicly accessible even when their source repository is private. See [GitHub publishing sources and plan requirements](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+
+Vue Router hash paths (`/#/`, `/#/privacy`) and relative Vite asset URLs support repository subdirectory hosting without server rewrites. Update Google API key website restrictions and OAuth JavaScript origins for the deployed domain. Local data does not move between origins automatically; export/restore your board when moving devices or hosting URLs.
+
+The existing **Deploy Pages (manual)** Actions workflow is an alternative artifact-based deployment method. Do not run that workflow for branch-based publishing. It also cannot bypass GitHub plan requirements. Commits made with Actions' default `GITHUB_TOKEN` do not trigger branch-based Pages builds, so `deploy:pages` uses your normal local Git authentication; no extra token is embedded in the app or repository.
+
+CI tests/builds/packages source pushes and pull requests; it does not publish a website. Choose a license before offering reuse under specific terms. Shared deployment/OAuth app operators should provide their contact/privacy information and adapt the included Data use page.
 
 ## Architecture
 
