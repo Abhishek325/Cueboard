@@ -39,3 +39,53 @@ test('calendar renders posted ticks and scheduled clocks on the same date, and n
   const wrapper = mount(PostingCalendar, { props: { cache } });
   try { expect(wrapper.find('.has-post.has-scheduled').exists()).toBe(true); expect(wrapper.find('.calendar-clock').exists()).toBe(true); const before = wrapper.find('.calendar-nav').text(); await wrapper.get('[aria-label="Previous month"]').trigger('click'); expect(wrapper.find('.calendar-nav').text()).not.toBe(before); } finally { wrapper.unmount(); }
 });
+
+test('board prioritizes ongoing work and expands completed previews without hiding search results or changing saved order', async () => {
+  const idea = (id, theme, status) => ({ id, theme, status, title: id, format: 'Reel + Short' });
+  const data = { schemaVersion: 1, themes: [{ id: 'build', name: 'Build' }, { id: 'learn', name: 'Learn' }], ideas: [
+    idea('Planned-first', 'build', 'planned'), idea('Ongoing-first', 'build', 'progress'),
+    idea('Planned-second', 'build', 'planned'), idea('Ongoing-second', 'build', 'progress'),
+    ...[1, 2, 3, 4].map(n => idea('Finished-' + n, 'build', 'done')),
+    idea('Learn-planned', 'learn', 'planned'), idea('Learn-ongoing', 'learn', 'progress'), idea('Learn-finished', 'learn', 'done'),
+  ] };
+  await repository.db.open();
+  await repository.update(() => data);
+  const wrapper = mount(BoardView, { attachTo: document.body, global: { provide: { appearance: { preference: ref('system'), set: vi.fn() } } } });
+  const titles = selector => wrapper.findAll(selector + ' .idea-title').map(card => card.text());
+  try {
+    await vi.waitFor(() => expect(wrapper.findAll('.active-grid .idea-card')).toHaveLength(6));
+    expect(titles('.active-grid .column:first-child')).toEqual(['Ongoing-first', 'Ongoing-second', 'Planned-first', 'Planned-second']);
+    expect(titles('.active-grid .column:last-child')).toEqual(['Learn-ongoing', 'Learn-planned']);
+    expect(titles('.done-grid')).toEqual(['Finished-1', 'Finished-2', 'Learn-finished']);
+    expect(wrapper.findAll('.is-completed-preview')).toHaveLength(1);
+    expect(wrapper.get('.is-completed-preview .idea-title').text()).toBe('Finished-2');
+    expect(wrapper.get('.completed-more-button').text()).toContain('2 more');
+    expect(wrapper.get('.completed-more-button').attributes('aria-expanded')).toBe('false');
+    await wrapper.get('.completed-more-button').trigger('click');
+    expect(titles('.done-grid')).toEqual(['Finished-1', 'Finished-2', 'Finished-3', 'Finished-4', 'Learn-finished']);
+    expect(wrapper.find('.is-completed-preview').exists()).toBe(false);
+    expect(wrapper.get('.completed-more-button').attributes('aria-expanded')).toBe('true');
+    await wrapper.get('.completed-more-button').trigger('click');
+    expect(wrapper.findAll('.done-grid .idea-card')).toHaveLength(3);
+
+    await wrapper.get('input[type="search"]').setValue('Finished-4');
+    expect(titles('.done-grid')).toEqual(['Finished-4']);
+    expect(wrapper.find('.is-completed-preview').exists()).toBe(false);
+    expect(wrapper.find('.completed-more-button').exists()).toBe(false);
+    await wrapper.get('input[type="search"]').setValue('');
+    expect(wrapper.findAll('.done-grid .idea-card')).toHaveLength(3);
+    await wrapper.get('.theme-nav button:last-child').trigger('click');
+    expect(titles('.done-grid')).toEqual(['Learn-finished']);
+    expect(wrapper.find('.completed-more-button').exists()).toBe(false);
+    await wrapper.get('[aria-label="Show all themes"]').trigger('click');
+    expect(wrapper.find('.completed-more-button').exists()).toBe(true);
+    expect((await repository.readBoard()).ideas.map(i => i.id)).toEqual(data.ideas.map(i => i.id));
+
+    await wrapper.get('[aria-label="Open idea: Planned-second"]').trigger('click');
+    await wrapper.get('#idea-status').setValue('progress');
+    await wrapper.findComponent(IdeaEditor).get('form').trigger('submit');
+    await vi.waitFor(() => expect(titles('.active-grid .column:first-child')).toEqual(['Ongoing-first', 'Planned-second', 'Ongoing-second', 'Planned-first']));
+    await button(wrapper, 'Undo').trigger('click');
+    await vi.waitFor(() => expect(titles('.active-grid .column:first-child')).toEqual(['Ongoing-first', 'Ongoing-second', 'Planned-first', 'Planned-second']));
+  } finally { wrapper.unmount(); await flushPromises(); await repository.db.delete(); document.body.innerHTML = ''; }
+});

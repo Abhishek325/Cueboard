@@ -12,3 +12,11 @@
 @media(max-width:720px){.demo-notice{align-items:flex-start;font-size:10px}.dialog-left{gap:9px}.dialog-footer{flex-wrap:wrap}.board-footnote .text-danger{margin-top:9px}}
 
 .connection-fields{border:0;padding:0;margin:0;min-width:0}.connection-fields:disabled{opacity:.6}.sidebar{overflow-y:auto}.theme-name{margin:0}.btn:disabled,button:disabled{cursor:default;opacity:.45}.privacy-document{max-width:760px;padding:40px 24px;margin:auto;font-size:15px;line-height:1.8}.privacy-document h1{margin:25px 0}.privacy-document h2{font-size:20px;margin-top:30px}.privacy-document footer{margin-top:30px;border-top:1px solid var(--line);padding-top:20px}.calendar-popover{max-height:50dvh;overflow-y:auto}.calendar-popover-heading button{margin-left:auto}.theme-nav .nav-item{overflow-wrap:anywhere}.save-error button{text-decoration:underline;margin-left:10px}
+.idea-card.is-completed-preview{filter:blur(.65px);opacity:.48}
+.idea-card.is-completed-preview:hover,.idea-card.is-completed-preview:focus-within{filter:none;opacity:1}
+.completed-more{display:flex;justify-content:center;margin:-22px 0 24px;position:relative}
+.completed-more-button{min-height:40px;border:1px solid var(--line);background:var(--paper);color:var(--ink);box-shadow:0 2px 8px #00000008;gap:9px}
+.completed-more-button:hover{background:var(--sidebar)}
+.completed-more-count{font-size:10px;color:var(--muted)}
+.completed-more-button svg{width:13px;height:13px}
+.completed-more-button[aria-expanded="true"] svg{transform:rotate(180deg)}
