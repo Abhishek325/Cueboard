@@ -1,183 +1,322 @@
-# Cueboard
+# 🎬 Cueboard
 
-A local-first **Vue 3 single-page application** for planning content by theme. Uses Vue Router, Vite, Dexie/IndexedDB, Vitest and Vue Test Utils. The YouTube integration is optional; no backend or shared developer credentials are included.
+### Less hunting for ideas. More making them.
 
-[Use Cueboard](https://abhishek325.github.io/Cueboard/) · [Getting started](https://abhishek325.github.io/Cueboard/guide/) · [Privacy](https://abhishek325.github.io/Cueboard/privacy/)
+A simple workspace for planning YouTube videos, Shorts and Instagram Reels.
 
-## Develop
+Group ideas by theme, keep your current work visible, and see what you’ve already finished—all on one board.
 
-Use Node.js **22.22.2 or newer** (tested on 22.22.2). `.nvmrc` pins the tested runtime.
+**[Open Cueboard →](https://abhishek325.github.io/Cueboard/)** · [Getting started](https://abhishek325.github.io/Cueboard/guide/) · [Privacy](https://abhishek325.github.io/Cueboard/privacy/)
+
+## 💡 From “I should make this” to “Published”
+
+An idea in your notes. A script in another tab. A video you meant to finish.
+
+Cueboard gives them a place to move forward:
+
+| Capture it | Work on it | Finish it |
+| --- | --- | --- |
+| Add an idea under your own theme. | Mark it in progress—it rises to the top of its theme with a moving border. | Mark it complete—it moves below the divider. |
+
+Completed work stays accessible without crowding your next ideas. See two completed cards per theme, then choose **View all completed** to explore the rest.
+
+## Built around your content
+
+- **Your themes, your ideas.** Create buckets that match what you make.
+- **More than a title.** Add the demonstration, viewer value, notes and format.
+- **A clear next step.** In-progress cards appear first within each theme.
+- **Find ideas quickly.** Search your board or focus on one theme.
+- **See your posting rhythm.** Optionally connect YouTube for a monthly calendar with posted and scheduled videos.
+- **Add performance context.** Link YouTube videos to cards and view supported metrics.
+- **Make it comfortable.** Choose light, dark or your system’s appearance.
+
+Cueboard is a planning workspace. You publish through YouTube or Instagram yourself.
+
+## 🚀 Try it in a minute
+
+1. **[Open Cueboard](https://abhishek325.github.io/Cueboard/).** No Cueboard account needed.
+2. Explore the sample board—or choose **Start empty**.
+3. Create a theme and add your first idea.
+4. Mark it **In progress** when you start working.
+5. Mark it **Complete** when you’re done.
+
+YouTube setup is optional. Start planning immediately.
+
+You can also remove the sample content later with **Remove demo data** at the bottom of the board. Your own ideas and sample cards you edited and saved stay.
+
+## Your board stays in your browser
+
+Your ideas are saved on this device in your browser’s IndexedDB. They are not uploaded to a Cueboard server.
+
+- **Export backup** downloads your board as a JSON file.
+- **Restore a backup** brings that file into another browser or device.
+- Changes offer a short **Undo** window.
+
+There is no automatic cloud sync. Clearing browser data can remove your board, so keep a backup of work you want to preserve.
+
+## Connect YouTube when you’re ready
+
+Bring posting dates and performance context into your planning workspace.
+
+| Connection | What you get | What you need |
+| --- | --- | --- |
+| Public videos | Public upload dates and lifetime view, like and comment totals | Your own YouTube Data API key |
+| My channel + analytics | Public and scheduled uploads, plus dated private reports for linked public videos | Your own Google OAuth web client and read-only sign-in |
+
+Scheduled uploads appear with a clock in the calendar. Public lifetime totals and private reports for a selected period are labelled separately.
+
+**Cueboard cannot upload, edit or delete your videos.** It does not currently connect to Instagram’s API.
+
+---
+
+## For developers
+
+Cueboard is a browser-based single-page application with no application backend.
+
+| Part | Technology |
+| --- | --- |
+| Interface | Vue 3 |
+| Routing | Vue Router |
+| Development and build | Vite |
+| Browser storage | Dexie + IndexedDB |
+| Testing | Vitest, Vue Test Utils, Happy DOM and fake-indexeddb |
+| Hosting | GitHub Pages |
+
+### Run locally
+
+Requires **Node.js 22.22.2 or newer**. The tested version is pinned in `.nvmrc`.
 
 ```sh
-nvm use # if you use nvm
+git clone https://github.com/Abhishek325/Cueboard.git
+cd Cueboard
+
+# Optional, if you use nvm
+nvm use
+
 npm ci
 npm run dev
 ```
 
-Open <http://127.0.0.1:8775/>. The previous Python server and opening `index.html` directly are no longer supported development methods: Vue files require Vite.
+Open **http://127.0.0.1:8775/**.
 
-| Command | Result |
-| --- | --- |
-| `npm run dev` | Vite development server with hot reload on 8775 |
-| `npm test` | Unit, Vue component and Dexie/API integration tests |
-| `npm run test:watch` | Interactive Vitest watch mode |
-| `npm run test:coverage` | V8 coverage report in `coverage/` |
-| `npm run build` | Optimized production assets in `dist/` |
-| `npm run preview` | Serve the production build locally on 8776 |
-| `npm run check` | Tests, then production build |
-| `npm run package` | Tests/build, then source and deployment ZIPs in `release/` |
-| `npm run deploy:pages` | Tests/build, then publishes only `dist/` to `gh-pages` using your Git credentials |
+Use the development server rather than opening `index.html` directly.
 
-`npm ci` uses the committed lockfile. Do not commit `node_modules/`, `dist/`, `release/`, credentials, environment files or personal JSON backups. The source package has an explicit file allowlist, refuses symlinks and checks for common credential formats. Build artifacts contain application code and generic examples only, never browser data.
+<details>
+<summary><strong>YouTube API setup</strong></summary>
 
-## Board features
-
-- Editable theme columns and idea cards with title, demonstration, viewer value, notes, format and YouTube video link.
-- Statuses: Not started, In progress (moving border) and Complete. Completed cards sit below a horizontal divider.
-- First-use samples: two themes and three clearly labelled ideas in `src/data/demo.js`. There are no required theme/idea IDs.
-- **Start empty** or **Remove demo data** at the bottom removes samples and unused sample themes. Your own content and edited/saved samples stay. Changes offer a short Undo window.
-- Validated JSON export/restore, search, theme filtering, light/dark/system appearance and a monthly YouTube calendar.
-- Up to 50 themes and 2,000 ideas. The app supports an empty board without reseeding it.
-
-## IndexedDB storage and migration
-
-The Dexie database is **`content-board`**, version 1. Inspect it under Chrome DevTools > Application > IndexedDB.
-
-| Table | Stored data |
-| --- | --- |
-| `themes` | Theme names, colors, descriptions, ordering and sample flags |
-| `ideas` | Idea content, status, selection, ordering and video links |
-| `settings` | Appearance and nonsecret YouTube configuration |
-| `youtubeCache` | Dated upload metadata and public/private reports |
-| `credentials` | An API key only when Remember is explicitly enabled |
-| `meta` | Initialization marker and board revision for safe Undo |
-
-Writes involving themes/ideas are transactional. Queries observe committed changes across tabs using Dexie `liveQuery`. Undo refuses to overwrite a newer board revision. Storage failures remain visible and do not claim a successful save.
-
-On first launch, the app migrates the previous generic board's `content-board:` localStorage keys **on the same origin** into IndexedDB, including an intentionally empty board. Successfully migrated keys are removed only after the IndexedDB transaction commits. An invalid legacy board remains untouched and shows a recovery error. There is no automatic migration of a personal/branded board or data from a different hostname/port. Use JSON export/restore when moving to GitHub Pages or another device.
-
-API keys remain session-only by default; Google tokens always remain in memory. API keys, tokens, settings and cached analytics are **excluded** from board exports. IndexedDB is browser-local storage, not encrypted storage or cloud synchronization. Clearing site data or browser eviction can remove it: export backups for safekeeping. IndexedDB is shared by an origin, not a repository URL path; use a separate hostname or change `DATABASE_NAME` if you need isolation from other copies on the same GitHub Pages domain.
-
-## YouTube: choose a connection
-
-The board works without YouTube. Open **YouTube setup** to connect your own channel.
-
-| Mode | What it loads | What you provide |
-| --- | --- | --- |
-| Public videos | Public upload dates and public lifetime view, like and comment totals | Your YouTube Data API key and channel ID, @handle or channel URL |
-| My channel + analytics | Your public/scheduled uploads and private, dated reports for linked public videos | Your own Google OAuth web client ID and Google consent |
-
-**An API key cannot read scheduled private uploads or private YouTube Analytics reports.** Google sign-in is required for that access. Public lifetime totals and private period reports are labelled separately and must not be compared as identical measurements.
-
-### Public API key setup
+### Public videos
 
 1. Create or select your own project in [Google Cloud Console](https://console.cloud.google.com/).
-2. Enable **YouTube Data API v3** under APIs & Services.
-3. Create an API key. Restrict it to **YouTube Data API v3** under API restrictions, and restrict websites/referrers to your actual deployment under application restrictions. Use separate keys for development and production when practical.
-4. For this local server, add `http://127.0.0.1:8775/*` as an allowed website. If you use localhost, a different port or GitHub Pages, add that exact host/path as well. Example production referrer: `https://YOUR-USER.github.io/YOUR-REPOSITORY/*`.
-5. Paste the key and a channel identifier into the board, review the data-use notice and choose **Load public videos**.
+2. Enable **YouTube Data API v3**.
+3. Create an API key.
+4. Restrict the key to **YouTube Data API v3** and the websites where you run Cueboard.
+5. Open **YouTube setup** in the board.
+6. Enter your key and channel ID, `@handle` or channel URL.
+7. Review the data-use notice and choose **Load public videos**.
 
-The key is sent directly to Google in the `X-Goog-Api-Key` header. It is kept in memory by default. **Remember this API key on this device** saves it in this origin's IndexedDB; **Forget API key** or **Disconnect** removes the saved copy. Browser keys are visible to that browser's user and scripts on the same origin. Restrictions reduce misuse; they do not make a browser key secret. Never commit a key, client secret or downloaded credential file.
+For local development, an allowed website is:
 
-Each visitor supplies their own key. There is no shared developer key in this project. Refresh consumes the visitor's Google Cloud project's API quota. No automatic network refresh runs on page load.
+```text
+http://127.0.0.1:8775/*
+```
 
-### Optional owner sign-in
+For the hosted app:
 
-1. In your own Google Cloud project, enable **YouTube Data API v3** and **YouTube Analytics API**.
-2. Configure Google's OAuth consent screen/audience. While in testing, add the Google account(s) that will use it as test users. Public distribution of an OAuth app may require Google's verification; this template does not provide a verified shared OAuth application.
-3. Create an OAuth client with application type **Web application**. Add the exact origin shown in the board to **Authorized JavaScript origins**. For example: `http://127.0.0.1:8775` or `https://YOUR-USER.github.io`. Origins have no repository path. No redirect endpoint or client secret is used by this browser popup flow.
-4. Select **My channel + analytics**, enter your web client ID, optionally specify a channel and choose **Connect Google**. Choose the account/brand channel that owns it and grant both read permissions.
-5. Paste each video's YouTube URL or ID into the matching idea, save it and refresh YouTube to retrieve its private report.
+```text
+https://abhishek325.github.io/Cueboard/*
+```
 
-Only `youtube.readonly` and `yt-analytics.readonly` scopes are requested. The board cannot upload, edit or delete videos. The access token stays in memory and is lost after reload/expiry; reconnect to refresh private data. The client ID is public configuration, not a client secret. If Google sign-in has not loaded yet, press Connect Google again once the board says it is ready.
+Add separate entries for other hosts or ports you use. Separate development and production keys are recommended.
 
-A channel selection must match the signed-in channel. If Google returns multiple channels, specify the intended channel. Owner reports end yesterday in Pacific time, can lag further and cover 7/28/90 calendar days. Missing reports or metrics are shown as unavailable rather than zero. Private drafts are not calendar entries; scheduled private uploads with a publication time show a clock. Uploads are not automatically classified as Shorts.
+Each visitor supplies their own key. No shared developer key is included.
 
-### Refresh, storage and privacy
+The key stays in memory unless **Remember this API key on this device** is enabled. A remembered key is stored in IndexedDB. Website and API restrictions help limit misuse; a key used in a browser is not a secret.
 
-- Sync runs only when requested; reload displays dated saved data. Calendars show dates in the viewer's browser timezone.
-- YouTube responses are cached locally for up to 30 days, then removed on the next visit or while the board is open. Refresh replaces the saved snapshot. Up to 5,000 upload entries are supported; larger channels fail without saving partial data.
-- **Clear saved YouTube data** removes the local cache. **Disconnect** removes the session token and API key; it retains the dated cache. **Revoke Google access** also clears the cache. You can remove the grant in [Google Account connections](https://myaccount.google.com/connections), including after a session expires.
-- Clearing the browser's site data removes board content and connection settings. Export a board backup first. IndexedDB belongs to an origin, not a URL path; projects hosted under the same GitHub Pages origin can share this storage namespace. Use a separate hostname or change `DATABASE_NAME` in `src/services/database.js` if isolation is needed.
-- No app server receives content, keys or reports. Hosting providers still handle page requests. Google receives API/sign-in requests and YouTube thumbnails load from Google when a calendar preview is opened. See [data use](#/privacy).
+Refresh requests consume your Google Cloud project’s API quota. Cueboard does not automatically refresh YouTube data on page load.
 
-## GitHub Pages branch deployment
+### Owner sign-in and analytics
 
-`main` holds source code. `gh-pages` holds only the generated production site (HTML, compiled assets, discovery files and `.nojekyll`). Browser data, API keys, tests, dependencies and source files are never copied to the hosting branch.
+1. Enable **YouTube Data API v3** and **YouTube Analytics API** in your Google Cloud project.
+2. Configure the OAuth consent screen and audience. Add test users if your app is in testing.
+3. Create an OAuth client of type **Web application**.
+4. Add the exact deployment origin to **Authorized JavaScript origins**.
+5. Select **My channel + analytics** in Cueboard and enter your client ID.
+6. Choose **Connect Google**, then select the account or brand channel that owns your channel.
+7. Add a YouTube video URL or ID to an idea and refresh YouTube to load its report.
 
-To create or update the build branch from an authenticated local checkout:
+Example JavaScript origins:
+
+```text
+http://127.0.0.1:8775
+https://abhishek325.github.io
+```
+
+Origins do not include the repository path.
+
+Cueboard requests only:
+
+```text
+youtube.readonly
+yt-analytics.readonly
+```
+
+The browser popup flow does not use a client secret or a server redirect endpoint. The client ID is public configuration.
+
+Google tokens stay in memory. Reconnect after a reload or token expiry to refresh private reports. A publicly distributed OAuth application may require Google verification; Cueboard does not provide a verified shared OAuth app.
+
+### Reading the results
+
+- Owner reports cover 7, 28 or 90 calendar days and end yesterday in Pacific time. Data can lag further.
+- Missing reports appear as unavailable rather than zero.
+- Calendar dates use the viewer’s browser timezone.
+- Scheduled private uploads with a publication time appear in the calendar; ordinary private drafts do not.
+- Uploads are not automatically classified as Shorts.
+
+</details>
+
+<details>
+<summary><strong>Storage, backups and privacy</strong></summary>
+
+Cueboard uses the Dexie database **`content-board`**.
+
+| Table | Purpose |
+| --- | --- |
+| `themes` | Theme names, colours, descriptions and ordering |
+| `ideas` | Content, status, format, notes and video links |
+| `settings` | Appearance and YouTube configuration |
+| `youtubeCache` | Dated upload metadata and reports |
+| `credentials` | An API key when remembering it is explicitly enabled |
+| `meta` | Initialization and revision tracking |
+
+Board changes are transactional. Open tabs observe committed changes through Dexie’s `liveQuery`. Undo will not overwrite a newer board revision.
+
+Board backups contain themes and ideas. They exclude API keys, Google tokens, connection settings and cached analytics.
+
+Browser storage is local, not encrypted storage or cloud synchronization. Clearing site data or browser eviction can remove it.
+
+### Moving an existing board
+
+Use **Export backup** on the original board, then **Restore a backup** on the destination. Restore replaces the destination board, so export its current content first if needed.
+
+The app also supports first-run migration of its previous generic `content-board:` localStorage keys on the same origin. Migration removes those keys only after the IndexedDB transaction succeeds. Invalid legacy data remains untouched.
+
+IndexedDB belongs to an **origin**, not a repository path. Copies hosted under the same GitHub Pages domain can share the database namespace. Use a separate hostname or change `DATABASE_NAME` in `src/services/database.js` when isolation is needed.
+
+### YouTube data
+
+YouTube snapshots are cached locally for up to 30 days. Refresh replaces the saved snapshot.
+
+- **Clear saved YouTube data** removes the local cache.
+- **Disconnect** removes the session token and API key while retaining the dated cache.
+- **Revoke Google access** also clears the cache.
+
+You can also remove access through [Google Account connections](https://myaccount.google.com/connections).
+
+No Cueboard application server receives your board or reports. Hosting providers handle page requests; Google receives API and sign-in requests. Calendar previews can load thumbnails from Google.
+
+Read the [privacy and data-use page](https://abhishek325.github.io/Cueboard/privacy/) for more information.
+
+</details>
+
+<details>
+<summary><strong>Packaging</strong></summary>
+
+Packaging uses an explicit source-file allowlist, refuses symbolic links and checks for common credential formats.
+
+Do not commit:
+
+```text
+node_modules/
+dist/
+release/
+.env files
+credentials
+personal JSON backups
+```
+
+The production build contains application code and generic samples—not users’ browser data.
+
+</details>
+
+<details>
+<summary><strong>Deploying to GitHub Pages</strong></summary>
+
+The repository uses:
+
+- **`main`** for source code.
+- **`gh-pages`** for the generated website.
+
+From an authenticated local checkout:
 
 ```sh
 npm ci
 npm run deploy:pages
 ```
 
-The command runs tests and a production build before pushing `dist/` to `origin/gh-pages`. It preserves the branch history and leaves your checkout on `main`. Review and commit source changes before publishing them. Updating `main` alone does not update the hosted build; run the command for each release. Application CI excludes `gh-pages` because generated assets have no npm project.
+The command runs tests, builds the app and publishes `dist/` to `origin/gh-pages`. It preserves deployment history and leaves your checkout on `main`.
 
-### Enable hosting
-
-Once your GitHub account/repository supports Pages:
-
-1. Open repository Settings > Pages.
-2. Set Source to **Deploy from a branch**.
-3. Choose **gh-pages**, folder **/(root)**, then Save.
-4. GitHub builds/deploys that branch. Use the site URL shown by GitHub once deployment succeeds.
-
-**Private repositories require a GitHub plan that includes private-repository Pages.** If Settings displays “Upgrade or make this repository public to enable Pages”, creating the branch cannot enable hosting. The repository owner must upgrade their plan or explicitly choose public repository visibility; the publishing command does neither. Standard Pages sites are publicly accessible even when their source repository is private. See [GitHub publishing sources and plan requirements](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-Vue Router hash paths (`/#/`, `/#/privacy`) and relative Vite asset URLs support repository subdirectory hosting without server rewrites. Update Google API key website restrictions and OAuth JavaScript origins for the deployed domain. Local data does not move between origins automatically; export/restore your board when moving devices or hosting URLs.
-
-The existing **Deploy Pages (manual)** Actions workflow is an alternative artifact-based deployment method. Do not run that workflow for branch-based publishing. It also cannot bypass GitHub plan requirements. Commits made with Actions' default `GITHUB_TOKEN` do not trigger branch-based Pages builds, so `deploy:pages` uses your normal local Git authentication; no extra token is embedded in the app or repository.
-
-CI tests/builds/packages source pushes and pull requests; it does not publish a website. Choose a license before offering reuse under specific terms. Shared deployment/OAuth app operators should provide their contact/privacy information and adapt the included Data use page.
-
-## Architecture
+In repository **Settings → Pages**, select:
 
 ```text
-src/
-  components/     Board cards/editors, calendar, dialogs, YouTube settings
-  composables/    Reactive board, appearance and YouTube session state
-  services/       Dexie repository, Google sign-in loader and YouTube API client
-  lib/            Validation, date/calendar and API parsing helpers
-  data/demo.js    Removable onboarding data
-  views/          Board and lazily loaded Data use page
-  styles/         Shared responsive light/dark appearance
-scripts/package.mjs  Sanitized source/deployment packaging
-site/discovery.mjs   Static public content, metadata, structured data and sitemap
+Source: Deploy from a branch
+Branch: gh-pages
+Folder: /(root)
 ```
 
-Vue owns rendering and events; no legacy global UI scripts or direct `innerHTML` rendering remain. The repository owns persistence, and the API client receives credentials in memory. No Pinia store or server is needed for this single-workspace app.
+Updating `main` alone does not publish the website. Run the deployment command for each release.
 
-## Search and AI discovery
+CI tests, builds and packages source changes; it does not automatically deploy them. The separate manual artifact-deployment workflow is an alternative and should not be run alongside this branch-based publishing setup.
 
-The board has a small **About Cueboard** footer link that opens a native dialog, with Escape, close button, backdrop dismissal and focus restoration. Its product text is in the initial HTML; without JavaScript, the link opens the separate About page. `/about/`, `/guide/` and `/privacy/` are real static pages with ordinary links, unique titles/descriptions and matching canonical/Open Graph URLs. Each works without JavaScript. The board stays at its existing hash URL and keeps the same IndexedDB database; no personal content is included in the public HTML. The app container is excluded from Google snippets with `data-nosnippet`.
+Hash routes and relative asset paths support repository subdirectory hosting without server rewrites.
 
-`site/discovery.mjs` is the source for public copy, JSON-LD (`WebSite`, `WebPage`, `WebApplication`), the four-page sitemap and a factual `llms.txt` summary. No invented ratings, reviews or audience claims are included. Structured data does not guarantee rich results, rankings or AI citations. `llms.txt` is optional experimental documentation: Google does not require it for AI features, and it is not a crawler permission control.
+For another deployment:
 
-The default canonical URL is `https://abhishek325.github.io/Cueboard/`. For another deployment, set `SITE_URL=https://example.com/planner/` when building. This changes canonical, schema, social-image and sitemap URLs together. Change repository links in `site/discovery.mjs` when forking. Static sharing assets live in `public/`; `scripts/create-social-card.py` can recreate the PNGs with Pillow (macOS Arial fonts, optional, not part of the build).
+- Update API-key website restrictions and OAuth origins.
+- Set `SITE_URL` when building to update canonical, sitemap and sharing URLs.
+- Update repository links in `site/discovery.mjs`.
+- Export and restore browser data if the origin changes.
 
-### Indexing and measurement after deployment
+Example:
 
-1. In [Google Search Console](https://search.google.com/search-console), verify a **URL-prefix property** for the exact `https://abhishek325.github.io/Cueboard/` URL. Use Google's HTML-file verification method by adding the issued file to `public/`, or add its issued verification meta tag to the HTML. Do not invent a verification token. A domain property would require DNS control of `github.io`, which this repository does not have.
-2. Submit `https://abhishek325.github.io/Cueboard/sitemap.xml`; inspect the homepage and guide and request indexing. Do not list `#/privacy` or other fragments as separate sitemap URLs. Add the same URL-prefix site to [Bing Webmaster Tools](https://www.bing.com/webmasters/) and submit the sitemap there, or import the verified Google property when available.
-3. Track actual indexing, queries, impressions and clicks in those consoles. They are not configured by this code change. No analytics/advertising tracker was added. Search appearance and AI citations are not guaranteed and no numerical traffic uplift is asserted.
-4. Link the product naturally from your GitHub profile and relevant owned content when you choose to promote it. Publish additional guides only when they answer actual creator problems; avoid keyword stuffing, duplicate thin pages or automated link spam.
+```sh
+SITE_URL=https://example.com/planner/ npm run build
+```
 
-**robots.txt limitation:** crawlers read `https://abhishek325.github.io/robots.txt`, not `/Cueboard/robots.txt`. This project cannot change that host-root file without changing a separate root site. No ineffective project-path robots file is shipped. In the absence of a blocking host policy, crawling is allowed by default. An owner-controlled root site or custom domain could publish a root `robots.txt` with the sitemap location and crawler choices. `OAI-SearchBot` concerns ChatGPT search; `GPTBot` concerns potential training use. Allowing training is not required for search visibility. Do not claim either permission is configured merely because metadata or `llms.txt` exists.
+Private-repository Pages availability depends on your GitHub plan. Standard Pages sites are publicly accessible even when their source repository is private.
 
-The current app is operated on GitHub Pages with enforced HTTPS. No custom domain, host-root policy, Google/Bing verification, third-party tracking or indexing-service account is created by the application. Semantic headings, labelled controls and native inputs also help browser agents operate the existing board; there is no public API that exposes private board data or grants agents new access.
+</details>
 
-References: [Google JavaScript SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics), [Google AI search guidance](https://developers.google.com/search/docs/appearance/ai-features), [robots.txt location](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt), [OpenAI crawler roles](https://developers.openai.com/api/docs/bots).
+<details>
+<summary><strong>Search and AI discovery</strong></summary>
 
-## Verification and limits
+Cueboard includes:
 
-Tests cover board validation, sample cleanup, transaction rollback, first-run migration, concurrent changes/stale Undo, API-key persistence/deletion, read-only Google scopes, channel mismatch, request headers, calendar schedules and Vue editing flows. YouTube requests are mocked: a real user's key/client configuration, consent and quota must be checked after setup. Component tests use Happy DOM/fake IndexedDB and do not substitute for real browser checks.
+- Static About, Getting started and Privacy pages.
+- Page titles, descriptions and canonical URLs.
+- Open Graph and social-sharing metadata.
+- Structured data describing the website and application.
+- A sitemap and an optional factual `llms.txt` summary.
 
-## Official references
+Public copy is maintained in `site/discovery.mjs`. Personal board content is not included in the generated public HTML.
 
-- [Vue testing](https://vuejs.org/guide/scaling-up/testing.html)
-- [Dexie liveQuery](https://dexie.org/docs/liveQuery%28%29)
-- [Vite static deployment](https://vite.dev/guide/static-deploy.html)
-- [YouTube Data API getting started](https://developers.google.com/youtube/data/getting-started)
-- [YouTube Analytics authorization](https://developers.google.com/youtube/reporting/guides/authorization)
-- [API key header guidance](https://docs.cloud.google.com/docs/authentication/api-keys-use)
+For another deployment, update `SITE_URL` and verify the site in Google Search Console and Bing Webmaster Tools before submitting its sitemap.
+
+The current sitemap is:
+
+```text
+https://abhishek325.github.io/Cueboard/sitemap.xml
+```
+
+Search Console and Bing verification are not created by the application. No advertising or visitor-analytics tracker is included.
+
+Crawlers read `robots.txt` at the domain root. A project hosted at `/Cueboard/` cannot control that root file through a project-path `robots.txt`.
+
+Metadata, structured data and `llms.txt` do not guarantee indexing, rankings or AI citations. `llms.txt` is optional documentation, not a crawler-permission setting.
+
+</details>
+
+## Feedback welcome
+
+Missing something that would make your content planning easier? [Open an issue](https://github.com/Abhishek325/Cueboard/issues).
+
+If Cueboard helps you turn ideas into finished work, give the repository a ⭐.
