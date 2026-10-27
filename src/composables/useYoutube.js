@@ -8,6 +8,7 @@ import { fresh, SCOPES, channelLookup } from '../lib/youtube.js';
 export function useYoutube(ideas, repo = repository, api = createYouTubeApi()) {
   const config = ref({ mode: 'public', channel: '', clientId: '', days: 28 }), cache = ref(null), apiKey = ref(''), remember = ref(false);
   const busy = ref(false), authBusy = ref(false), message = ref('YouTube is optional. The board works without a connection.'), error = ref(false), tick = ref(Date.now()), hydrated = ref(false);
+  let disposed = false;
   let token = '', expires = 0, generation = 0, controller, subscriptions = [];
   const connected = computed(() => { tick.value; return !!token && Date.now() < expires; });
   const ready = computed(() => config.value.mode === 'owner' ? connected.value : !!apiKey.value);
@@ -19,9 +20,14 @@ export function useYoutube(ideas, repo = repository, api = createYouTubeApi()) {
   async function start() {
     try {
       await repo.open();
-      const saved = await repo.getSetting('youtube'); if (saved) config.value = { mode: saved.mode === 'owner' ? 'owner' : 'public', channel: saved.channel || '', clientId: saved.clientId || '', days: [7, 28, 90].includes(saved.days) ? saved.days : 28 };
-      apiKey.value = await repo.getApiKey(); remember.value = !!apiKey.value;
-      const cached = await repo.getCache(); if (validCache(cached)) cache.value = cached; else if (cached) await repo.setCache(null);
+      if (disposed) return;
+      const [saved, key, cached] = await Promise.all([repo.getSetting('youtube'), repo.getApiKey(), repo.getCache()]);
+      if (disposed) return;
+      if (saved) config.value = { mode: saved.mode === 'owner' ? 'owner' : 'public', channel: saved.channel || '', clientId: saved.clientId || '', days: [7, 28, 90].includes(saved.days) ? saved.days : 28 };
+      apiKey.value = key; remember.value = !!key;
+      if (validCache(cached)) cache.value = cached; else if (cached) await repo.setCache(null);
+      if (disposed) return;
+      subscriptions.forEach(s => s.unsubscribe()); subscriptions = [];
       // Other tabs can change connection settings or clear cached data. Never reuse a session for a different channel.
       subscriptions.push(liveQuery(() => repo.getSetting('youtube')).subscribe(saved => { if (saved && JSON.stringify(saved) !== JSON.stringify(config.value)) { resetSession(); config.value = saved; cache.value = null; } }));
       subscriptions.push(liveQuery(() => repo.getCache()).subscribe(saved => { cache.value = validCache(saved) ? saved : null; }));
@@ -73,6 +79,6 @@ export function useYoutube(ideas, repo = repository, api = createYouTubeApi()) {
   async function clear() { try { await repo.setCache(null); cache.value = null; say('Saved YouTube data removed.'); } catch (e) { say('Could not clear saved data: ' + e.message, true); } }
   async function revoke() { if (!connected.value) return; const current = token; resetSession(); await clear(); window.google.accounts.oauth2.revoke(current, result => say(result.successful ? 'Google access revoked.' : 'Confirm removal in Google Account connections.', !result.successful)); }
   const timer = setInterval(() => { tick.value++; if (token && !connected.value) { token = ''; say('Google sign-in expired. Reconnect to refresh.'); } if (cache.value && !fresh(cache.value)) clear(); }, 30000);
-  onScopeDispose(() => { resetSession(); clearInterval(timer); subscriptions.forEach(s => s.unsubscribe()); });
+  onScopeDispose(() => { disposed = true; resetSession(); clearInterval(timer); subscriptions.forEach(s => s.unsubscribe()); });
   return { config, cache, apiKey, remember, busy, authBusy, message, error, connected, ready, label, stamp, hydrated, start, refresh, connect, forget, disconnect, clear, revoke };
 }

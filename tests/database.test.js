@@ -9,7 +9,7 @@ function make(storage = new Map(), name = 'test-' + crypto.randomUUID()) {
 afterEach(async () => { for (const repo of repositories.splice(0)) await repo.db.delete(); });
 describe('Dexie persistence and migrations', () => {
   test('seeds once and does not restore removed demo data on reopen', async () => {
-    const repo = make(); await repo.open(); expect((await repo.readBoard()).ideas).toHaveLength(3);
+    const repo = make(); await repo.open(); expect((await repo.readBoard()).ideas).toHaveLength(demo.ideas.length);
     await repo.update(removeDemo);
     const second = make(new Map(), repo.db.name); await second.open(); expect(await second.readBoard()).toEqual({ schemaVersion: 1, themes: [], ideas: [] }); second.close();
   });
@@ -25,7 +25,7 @@ describe('Dexie persistence and migrations', () => {
   test('invalid legacy backup is not overwritten and initialization can be retried', async () => {
     const legacy = new Map([[LEGACY_KEYS.board, '{broken-json']]); const repo = make(legacy);
     await expect(repo.open()).rejects.toThrow('could not be migrated'); expect(legacy.get(LEGACY_KEYS.board)).toBe('{broken-json'); expect(await repo.db.meta.get('initialized')).toBeUndefined();
-    legacy.set(LEGACY_KEYS.board, JSON.stringify(demo)); await repo.open(); expect((await repo.readBoard()).ideas).toHaveLength(3);
+    legacy.set(LEGACY_KEYS.board, JSON.stringify(demo)); await repo.open(); expect((await repo.readBoard()).ideas).toHaveLength(demo.ideas.length);
   });
   test('a failed write rolls back all tables', async () => {
     const repo = make(); await repo.open(); const before = await repo.readBoard();

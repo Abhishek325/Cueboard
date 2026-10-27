@@ -11,8 +11,9 @@ test('public HTML describes the real product before JavaScript and keeps workspa
   expect(doc.title).toContain('Content Planner for YouTube');
   expect(doc.querySelector('#about-heading').textContent).toContain('YouTube and Instagram');
   expect(doc.querySelector('#about-cueboard').closest('dialog').hasAttribute('open')).toBe(false);
-  expect(doc.querySelector('.discovery-footer').textContent).toBe('About Cueboard');
-  expect(doc.querySelector('[data-about-open]').getAttribute('href')).toBe('./about/');
+  expect(doc.querySelector('.discovery-footer')).toBeNull();
+  expect(doc.querySelector('[data-about-open]')).toBeNull();
+  expect(doc.querySelector('#cueboard-about').getAttribute('aria-labelledby')).toBe('about-dialog-title');
   expect(doc.querySelector('#app').children).toHaveLength(0);
   expect(doc.querySelector('#app').hasAttribute('data-nosnippet')).toBe(true);
   expect(html).not.toMatch(/cueboard:metadata|cueboard:public-content|AIza|ya29\./);

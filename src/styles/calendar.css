@@ -4,8 +4,8 @@
 .calendar-heading{display:flex;align-items:center;justify-content:space-between;padding:0 3px;font-size:11px;font-weight:550;color:var(--ink)}
 .calendar-nav{display:flex;align-items:center;justify-content:space-between;gap:1px;margin:4px 0 7px}
 .calendar-nav button{padding:3px;border-radius:4px;color:var(--muted);font-size:15px;min-width:22px;min-height:26px}
-.calendar-nav button:hover{background:var(--sidebar);color:var(--ink)}
-.calendar-nav #calendar-month{flex:1;min-width:0;font-size:10px;font-weight:500;color:var(--muted);white-space:nowrap}
+.calendar-nav button:not(:disabled):hover{background:var(--sidebar);color:var(--ink)}
+.calendar-nav .calendar-month{flex:1;min-width:0;font-size:10px;font-weight:500;color:var(--muted);white-space:nowrap}
 .calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;padding:2px}
 .calendar-weekdays{margin-bottom:5px;text-align:center;font-size:8px;line-height:1;color:var(--muted)}
 .calendar-day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;position:relative;min-width:0;height:32px;padding:3px 0;font-size:10px;line-height:1;color:var(--muted);border-radius:4px;user-select:none}
@@ -26,7 +26,12 @@
 .calendar-legend svg{width:10px;height:10px}
 .calendar-schedule-time{display:flex!important;align-items:center;gap:4px;color:#3c6891!important}
 .calendar-schedule-time svg{width:11px;height:11px;flex:none}
-.calendar-source{display:block;margin:8px 3px 0;font-size:9px;color:var(--muted);white-space:nowrap;cursor:help}
+.calendar-actions{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.calendar-setup{padding:4px;border-radius:4px;font-size:9px;color:var(--muted);min-height:26px}
+.calendar-setup:hover{background:var(--sidebar);color:var(--ink)}
+.calendar-body{transition:opacity .15s}
+.has-no-data .calendar-body{opacity:.38}
+.calendar-nav button:disabled{cursor:default}
 .calendar-refresh{display:grid;place-items:center;width:23px;height:23px;border-radius:4px;color:var(--muted);padding:0}
 .calendar-refresh svg{width:13px;height:13px}
 .calendar-refresh:hover{background:var(--sidebar);color:var(--ink)}

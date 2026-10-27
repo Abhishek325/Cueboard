@@ -2,16 +2,17 @@ import { ref, computed, onScopeDispose } from 'vue';
 import { liveQuery } from 'dexie';
 import { repository } from '../services/database.js';
 import { normalize, removeDemo, deleteTheme, colors } from '../lib/board.js';
+import { reorderTheme, reorderIdea } from '../lib/reorder.js';
 
 export function useBoard(repo = repository) {
   const board = ref({ schemaVersion: 1, themes: [], ideas: [] });
   const loading = ref(true), busy = ref(false), error = ref(''), message = ref(''), undo = ref(null);
-  let subscription, timer;
+  let subscription, timer, disposed = false;
   function notify(text) { message.value = text; clearTimeout(timer); timer = setTimeout(() => { message.value = ''; undo.value = null; }, 9000); }
   async function start() {
     loading.value = true; error.value = '';
     try {
-      await repo.open(); board.value = await repo.readBoard();
+      await repo.open(); const value = await repo.readBoard(); if (disposed) return; board.value = value;
       subscription?.unsubscribe();
       subscription = liveQuery(() => repo.readBoard()).subscribe({ next: value => { board.value = value; }, error: e => { error.value = 'Could not read IndexedDB: ' + e.message; } });
     } catch (e) { error.value = e.message || 'IndexedDB is unavailable. Enable site storage and retry.'; }
@@ -52,8 +53,10 @@ export function useBoard(repo = repository) {
     catch (e) { undo.value = null; notify(e.message); }
     finally { busy.value = false; }
   }
-  onScopeDispose(() => { subscription?.unsubscribe(); clearTimeout(timer); });
+  onScopeDispose(() => { disposed = true; subscription?.unsubscribe(); clearTimeout(timer); });
   return { board, loading, busy, error, message, undo, start, notify, saveTheme, saveIdea, undoLast,
+    reorderTheme: (id, targetId, after) => change(b => reorderTheme(b, id, targetId, after), 'Theme order saved.'),
+    reorderIdea: (id, targetId, after) => change(b => reorderIdea(b, id, targetId, after), 'Idea order saved.'),
     hasDemo: computed(() => board.value.themes.some(t => t.isDemo) || board.value.ideas.some(i => i.isDemo)),
     removeDemo: () => change(removeDemo, 'Demo data removed.'),
     deleteTheme: id => change(b => deleteTheme(b, id), 'Theme deleted.'),

@@ -1,13 +1,13 @@
 import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
-import BoardView from './views/BoardView.vue';
+import ProjectWorkspace from './views/ProjectWorkspace.vue';
 import { setupAboutDialog } from './lib/about-dialog.js';
 import './styles/base.css';
 import './styles/theme.css';
 import './styles/calendar.css';
 import './styles/app.css';
-const router = createRouter({ history: createWebHashHistory(), routes: [{ path: '/', component: BoardView }, { path: '/privacy', component: () => import('./views/PrivacyView.vue') }, { path: '/:pathMatch(.*)*', redirect: '/' }] });
+const router = createRouter({ history: createWebHashHistory(), routes: [{ path: '/', component: ProjectWorkspace }, { path: '/privacy', component: () => import('./views/PrivacyView.vue') }, { path: '/:pathMatch(.*)*', redirect: '/' }] });
 createApp(App).use(router).mount('#app');
 const disposeAbout = setupAboutDialog();
 if (import.meta.hot) import.meta.hot.dispose(disposeAbout);

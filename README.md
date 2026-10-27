@@ -22,10 +22,11 @@ Completed work stays accessible without crowding your next ideas. See two comple
 
 ## Built around your content
 
+- **Separate projects.** Switch boards from the left dropdown. Each project has its own themes, ideas and YouTube setup.
 - **Your themes, your ideas.** Create buckets that match what you make.
 - **More than a title.** Add the demonstration, viewer value, notes and format.
 - **A clear next step.** In-progress cards appear first within each theme.
-- **Find ideas quickly.** Search your board or focus on one theme.
+- **Find ideas quickly.** Search your board or filter to one or several themes.
 - **See your posting rhythm.** Optionally connect YouTube for a monthly calendar with posted and scheduled videos.
 - **Add performance context.** Link YouTube videos to cards and view supported metrics.
 - **Make it comfortable.** Choose light, dark or your system’s appearance.
@@ -42,14 +43,16 @@ Cueboard is a planning workspace. You publish through YouTube or Instagram yours
 
 YouTube setup is optional. Start planning immediately.
 
-You can also remove the sample content later with **Remove demo data** at the bottom of the board. Your own ideas and sample cards you edited and saved stay.
+Use the project dropdown on the left to create or switch projects. Rename with the pencil beside the page heading; press Enter or click away to save automatically. The trash icon beside the heading deletes a project after confirmation. Your existing board stays in **Content board**; new projects start empty. Cueboard remembers your last project on this browser. Deleting the last project leaves a fresh empty board; appearance preferences stay unchanged.
+
+Choose **Start empty** in the sample-board notice to remove the remaining samples. Your own ideas and sample cards you edited and saved stay.
 
 ## Your board stays in your browser
 
 Your ideas are saved on this device in your browser’s IndexedDB. They are not uploaded to a Cueboard server.
 
-- **Export backup** downloads your board as a JSON file.
-- **Restore a backup** brings that file into another browser or device.
+- **Export backup** downloads the current project’s board as a JSON file. Export each project separately.
+- **Restore a backup** replaces only the current project’s board. Other projects stay unchanged. Connection settings and analytics are not included.
 - Changes offer a short **Undo** window.
 
 There is no automatic cloud sync. Clearing browser data can remove your board, so keep a backup of work you want to preserve.
@@ -162,7 +165,7 @@ yt-analytics.readonly
 
 The browser popup flow does not use a client secret or a server redirect endpoint. The client ID is public configuration.
 
-Google tokens stay in memory. Reconnect after a reload or token expiry to refresh private reports. A publicly distributed OAuth application may require Google verification; Cueboard does not provide a verified shared OAuth app.
+YouTube settings, remembered API keys and cached results are separate for each Cueboard project. Appearance is shared across projects. Google tokens and session-only API keys stay in memory and are cleared when switching projects. Reconnect after switching projects, a reload or token expiry to refresh private reports. A publicly distributed OAuth application may require Google verification; Cueboard does not provide a verified shared OAuth app.
 
 ### Reading the results
 

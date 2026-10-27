@@ -9,9 +9,10 @@ export const LEGACY_KEYS = {
   youtube: 'content-board:youtube:config:v1', cache: 'content-board:youtube:cache:v1', key: 'content-board:youtube:key:v1',
 };
 export function clone(value) { return JSON.parse(JSON.stringify(value)); }
-export function createRepository({ name = DATABASE_NAME, legacyStorage = globalThis.localStorage } = {}) {
+export function createRepository({ name = DATABASE_NAME, legacyStorage = globalThis.localStorage, seedDemo = true } = {}) {
   const db = new Dexie(name);
   db.version(1).stores({ themes: '&id, order', ideas: '&id, theme, status, order', settings: '&key', youtubeCache: '&key', credentials: '&key', meta: '&key' });
+  db.version(2).stores({ projects: '&id, name, createdAt' });
   let opening;
   const tables = [db.themes, db.ideas, db.meta];
   async function readBoard() {
@@ -29,7 +30,7 @@ export function createRepository({ name = DATABASE_NAME, legacyStorage = globalT
     const migrated = [];
     await db.transaction('rw', [...tables, db.settings, db.credentials, db.youtubeCache], async () => {
       if (await db.meta.get('initialized')) return;
-      let board = demo;
+      let board = seedDemo ? demo : { schemaVersion: 1, themes: [], ideas: [] };
       const raw = legacy(LEGACY_KEYS.board);
       if (raw !== null) {
         try { board = normalize(JSON.parse(raw)); }

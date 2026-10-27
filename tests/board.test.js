@@ -11,7 +11,7 @@ test('sample removal preserves user-created content and edited samples',()=>{
  const n=store.removeDemo(b);assert.deepEqual(n.ideas.map(i=>i.title),['My real tutorial','My next video']);assert.equal(n.themes.length,2);assert.equal(n.themes.some(t=>t.isDemo),false);assert.deepEqual(store.removeDemo(n),n);
 });
 test('theme deletion removes its ideas atomically and preserves original snapshot',()=>{
- const b=store.normalize(demo),snapshot=structuredClone(b),n=store.deleteTheme(b,b.themes[0].id);assert.equal(n.themes.length,1);assert.equal(n.ideas.length,1);assert.equal(store.validate(n),true);assert.deepEqual(b,snapshot);
+ const b=store.normalize(demo),snapshot=structuredClone(b),n=store.deleteTheme(b,b.themes[0].id);assert.equal(n.themes.length,b.themes.length-1);assert.deepEqual(n.ideas,b.ideas.filter(i=>i.theme!==b.themes[0].id));assert.equal(store.validate(n),true);assert.deepEqual(b,snapshot);
 });
 test('malformed IDs, duplicates, orphan ideas and invalid statuses are rejected',()=>{
  for(const mutate of [b=>delete b.themes[0].id,b=>b.themes.push(b.themes[0]),b=>b.ideas.push(b.ideas[0]),b=>b.ideas[0].theme='absent',b=>b.ideas[0].status='unknown',b=>b.ideas[0].youtubeVideoId='https://example.com',b=>b.ideas[0].title='']){const b=structuredClone(demo);mutate(b);assert.equal(store.validate(b),false);}
