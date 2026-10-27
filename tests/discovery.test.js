@@ -8,23 +8,28 @@ const parseHtml = html => new DOMParser().parseFromString(html.replace(/<link\b[
 test('public HTML describes the real product before JavaScript and keeps workspace data out', () => {
   const html = discoveryPlugin().transformIndexHtml.handler(readFileSync(resolve('index.html'), 'utf8'));
   const doc = parseHtml(html);
-  expect(doc.title).toContain('Content Planner for YouTube');
+  expect(doc.title).toBe('Slateory — Free Content Planner for YouTube & Instagram');
+  expect(defaultSiteUrl).toBe('https://abhishek325.github.io/Slateory/');
   expect(doc.querySelector('#about-heading').textContent).toContain('YouTube and Instagram');
-  expect(doc.querySelector('#about-cueboard').closest('dialog').hasAttribute('open')).toBe(false);
+  expect(doc.querySelector('#about-slateory').closest('dialog').hasAttribute('open')).toBe(false);
   expect(doc.querySelector('.discovery-footer')).toBeNull();
   expect(doc.querySelector('[data-about-open]')).toBeNull();
-  expect(doc.querySelector('#cueboard-about').getAttribute('aria-labelledby')).toBe('about-dialog-title');
+  expect(doc.querySelector('#slateory-about').getAttribute('aria-labelledby')).toBe('about-dialog-title');
   expect(doc.querySelector('#app').children).toHaveLength(0);
   expect(doc.querySelector('#app').hasAttribute('data-nosnippet')).toBe(true);
-  expect(html).not.toMatch(/cueboard:metadata|cueboard:public-content|AIza|ya29\./);
+  expect(html).not.toMatch(/slateory:metadata|slateory:public-content|AIza|ya29\./);
   expect(doc.querySelector('link[rel="canonical"]').href).toBe(defaultSiteUrl);
   const graph = JSON.parse(doc.querySelector('[type="application/ld+json"]').textContent)['@graph'];
-  expect(graph.find(item => item['@type'] === 'WebApplication').isAccessibleForFree).toBe(true);
+  const app = graph.find(item => item['@type'] === 'WebApplication');
+  expect(app.isAccessibleForFree).toBe(true);
+  expect(app.name).toBe('Slateory');
+  expect(app.sameAs).toBe('https://github.com/Abhishek325/Slateory');
   expect(JSON.stringify(graph)).not.toMatch(/aggregateRating|reviewCount|ratingValue/);
 });
 
 test('discovery URLs match real static pages and never advertise hash routes as indexable pages', () => {
   const files = discoveryFiles();
+  expect(JSON.stringify(files)).not.toMatch(/cueboard/i);
   const sitemap = new DOMParser().parseFromString(files['sitemap.xml'], 'application/xml');
   expect([...sitemap.querySelectorAll('loc')].map(x => x.textContent)).toEqual(pages.map(p => defaultSiteUrl + p.path));
   expect(files['sitemap.xml']).not.toContain('#');

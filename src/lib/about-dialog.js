@@ -1,5 +1,5 @@
 export function setupAboutDialog(root = document) {
-  const dialog = root.querySelector('#cueboard-about');
+  const dialog = root.querySelector('#slateory-about');
   if (!dialog || typeof dialog.showModal !== 'function') return () => {};
   const closeButton = dialog.querySelector('[data-about-close]');
   let opener = null;

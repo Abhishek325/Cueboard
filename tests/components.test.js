@@ -25,7 +25,7 @@ test('Vue board creates content, removes only samples, persists progress and sup
     expect(scrollArea.find('.summary-line').exists()).toBe(false);
     expect(scrollArea.find('.done-grid').exists()).toBe(true);
 
-    expect(wrapper.get('.topbar-actions [data-about-open]').text()).toBe('About Cueboard');
+    expect(wrapper.get('.topbar-actions [data-about-open]').text()).toBe('About Slateory');
     expect(wrapper.find('.sidebar .theme-nav').exists()).toBe(false);
     await wrapper.get('[aria-label="Filter themes"]').trigger('click');
     await wrapper.get('button[aria-label="New theme"]').trigger('click'); await wrapper.get('#theme-name').setValue('My custom theme'); await wrapper.findComponent(ThemeEditor).get('form').trigger('submit');

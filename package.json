@@ -1,5 +1,5 @@
 {
-  "name": "cueboard",
+  "name": "slateory",
   "version": "2.0.0",
   "private": true,
   "type": "module",
@@ -17,7 +17,7 @@
     "test:coverage": "vitest run --coverage",
     "check": "npm run test && npm run build",
     "package": "npm run check && node scripts/package.mjs",
-    "deploy:pages": "npm run check && gh-pages --dist dist --branch gh-pages --dotfiles --nojekyll --message \"Publish Cueboard production build\""
+    "deploy:pages": "npm run check && gh-pages --dist dist --branch gh-pages --dotfiles --nojekyll --message \"Publish Slateory production build\""
   },
   "dependencies": {
     "dexie": "^4.2.0",

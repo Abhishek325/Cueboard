@@ -18,14 +18,14 @@ afterEach(() => {
 });
 
 test('About works for dynamically mounted and replaced topbar links and returns focus', () => {
-  document.body.innerHTML = '<dialog id="cueboard-about"><button data-about-close>Close</button></dialog><header></header>';
+  document.body.innerHTML = '<dialog id="slateory-about"><button data-about-close>Close</button></dialog><header></header>';
   const dialog = document.querySelector('dialog');
   dialog.showModal = vi.fn(() => { dialog.open = true; });
   dialog.close = vi.fn(() => { dialog.open = false; dialog.dispatchEvent(new Event('close')); });
   cleanup = setupAboutDialog();
   const header = document.querySelector('header');
   function mountLink() {
-    header.innerHTML = '<a href="./about/" data-about-open><span>About Cueboard</span></a>';
+    header.innerHTML = '<a href="./about/" data-about-open><span>About Slateory</span></a>';
     return header.querySelector('a');
   }
   let link = mountLink();
@@ -52,7 +52,7 @@ test('About works for dynamically mounted and replaced topbar links and returns 
 });
 
 test('modified clicks and unsupported dialogs keep the ordinary About-page fallback', () => {
-  document.body.innerHTML = '<a href="./about/" data-about-open>About</a><dialog id="cueboard-about"><button data-about-close>Close</button></dialog>';
+  document.body.innerHTML = '<a href="./about/" data-about-open>About</a><dialog id="slateory-about"><button data-about-close>Close</button></dialog>';
   const dialog = document.querySelector('dialog');
   const link = document.querySelector('a');
   dialog.showModal = vi.fn();

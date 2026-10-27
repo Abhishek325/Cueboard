@@ -23,7 +23,7 @@ if (!built['dist/index.html']) throw Error('Run npm run build before packaging.'
 const site = Object.fromEntries(Object.entries(built).map(([key, value]) => [key.slice(5), value]));
 await mkdir(resolve(root, 'release'), { recursive: true });
 const checksums = {};
-for (const [name, data] of [['cueboard-source.zip', src], ['cueboard-dist.zip', site]]) {
+for (const [name, data] of [['slateory-source.zip', src], ['slateory-dist.zip', site]]) {
   const bytes = zipSync(data, { level: 9 }); await writeFile(resolve(root, 'release', name), bytes);
   checksums[name] = createHash('sha256').update(bytes).digest('hex');
   console.log(name + ': ' + Object.keys(data).length + ' files, ' + bytes.length + ' bytes');

@@ -1,4 +1,4 @@
-# 🎬 Cueboard
+# 🎬 Slateory
 
 ### Less hunting for ideas. More making them.
 
@@ -6,13 +6,13 @@ A simple workspace for planning YouTube videos, Shorts and Instagram Reels.
 
 Group ideas by theme, keep your current work visible, and see what you’ve already finished—all on one board.
 
-**[Open Cueboard →](https://abhishek325.github.io/Cueboard/)** · [Getting started](https://abhishek325.github.io/Cueboard/guide/) · [Privacy](https://abhishek325.github.io/Cueboard/privacy/)
+**[Open Slateory →](https://abhishek325.github.io/Slateory/)** · [Getting started](https://abhishek325.github.io/Slateory/guide/) · [Privacy](https://abhishek325.github.io/Slateory/privacy/)
 
 ## 💡 From “I should make this” to “Published”
 
 An idea in your notes. A script in another tab. A video you meant to finish.
 
-Cueboard gives them a place to move forward:
+Slateory gives them a place to move forward:
 
 | Capture it | Work on it | Finish it |
 | --- | --- | --- |
@@ -31,11 +31,11 @@ Completed work stays accessible without crowding your next ideas. See two comple
 - **Add performance context.** Link YouTube videos to cards and view supported metrics.
 - **Make it comfortable.** Choose light, dark or your system’s appearance.
 
-Cueboard is a planning workspace. You publish through YouTube or Instagram yourself.
+Slateory is a planning workspace. You publish through YouTube or Instagram yourself.
 
 ## 🚀 Try it in a minute
 
-1. **[Open Cueboard](https://abhishek325.github.io/Cueboard/).** No Cueboard account needed.
+1. **[Open Slateory](https://abhishek325.github.io/Slateory/).** No Slateory account needed.
 2. Explore the sample board—or choose **Start empty**.
 3. Create a theme and add your first idea.
 4. Mark it **In progress** when you start working.
@@ -43,13 +43,13 @@ Cueboard is a planning workspace. You publish through YouTube or Instagram yours
 
 YouTube setup is optional. Start planning immediately.
 
-Use the project dropdown on the left to create or switch projects. Rename with the pencil beside the page heading; press Enter or click away to save automatically. The trash icon beside the heading deletes a project after confirmation. Your existing board stays in **Content board**; new projects start empty. Cueboard remembers your last project on this browser. Deleting the last project leaves a fresh empty board; appearance preferences stay unchanged.
+Use the project dropdown on the left to create or switch projects. Rename with the pencil beside the page heading; press Enter or click away to save automatically. The trash icon beside the heading deletes a project after confirmation. Your existing board stays in **Content board**; new projects start empty. Slateory remembers your last project on this browser. Deleting the last project leaves a fresh empty board; appearance preferences stay unchanged.
 
 Choose **Start empty** in the sample-board notice to remove the remaining samples. Your own ideas and sample cards you edited and saved stay.
 
 ## Your board stays in your browser
 
-Your ideas are saved on this device in your browser’s IndexedDB. They are not uploaded to a Cueboard server.
+Your ideas are saved on this device in your browser’s IndexedDB. They are not uploaded to a Slateory server.
 
 - **Export backup** downloads the current project’s board as a JSON file. Export each project separately.
 - **Restore a backup** replaces only the current project’s board. Other projects stay unchanged. Connection settings and analytics are not included.
@@ -68,13 +68,13 @@ Bring posting dates and performance context into your planning workspace.
 
 Scheduled uploads appear with a clock in the calendar. Public lifetime totals and private reports for a selected period are labelled separately.
 
-**Cueboard cannot upload, edit or delete your videos.** It does not currently connect to Instagram’s API.
+**Slateory cannot upload, edit or delete your videos.** It does not currently connect to Instagram’s API.
 
 ---
 
 ## For developers
 
-Cueboard is a browser-based single-page application with no application backend.
+Slateory is a browser-based single-page application with no application backend.
 
 | Part | Technology |
 | --- | --- |
@@ -90,8 +90,8 @@ Cueboard is a browser-based single-page application with no application backend.
 Requires **Node.js 22.22.2 or newer**. The tested version is pinned in `.nvmrc`.
 
 ```sh
-git clone https://github.com/Abhishek325/Cueboard.git
-cd Cueboard
+git clone https://github.com/Abhishek325/Slateory.git
+cd Slateory
 
 # Optional, if you use nvm
 nvm use
@@ -112,7 +112,7 @@ Use the development server rather than opening `index.html` directly.
 1. Create or select your own project in [Google Cloud Console](https://console.cloud.google.com/).
 2. Enable **YouTube Data API v3**.
 3. Create an API key.
-4. Restrict the key to **YouTube Data API v3** and the websites where you run Cueboard.
+4. Restrict the key to **YouTube Data API v3** and the websites where you run Slateory.
 5. Open **YouTube setup** in the board.
 6. Enter your key and channel ID, `@handle` or channel URL.
 7. Review the data-use notice and choose **Load public videos**.
@@ -126,7 +126,7 @@ http://127.0.0.1:8775/*
 For the hosted app:
 
 ```text
-https://abhishek325.github.io/Cueboard/*
+https://abhishek325.github.io/Slateory/*
 ```
 
 Add separate entries for other hosts or ports you use. Separate development and production keys are recommended.
@@ -135,7 +135,7 @@ Each visitor supplies their own key. No shared developer key is included.
 
 The key stays in memory unless **Remember this API key on this device** is enabled. A remembered key is stored in IndexedDB. Website and API restrictions help limit misuse; a key used in a browser is not a secret.
 
-Refresh requests consume your Google Cloud project’s API quota. Cueboard does not automatically refresh YouTube data on page load.
+Refresh requests consume your Google Cloud project’s API quota. Slateory does not automatically refresh YouTube data on page load.
 
 ### Owner sign-in and analytics
 
@@ -143,7 +143,7 @@ Refresh requests consume your Google Cloud project’s API quota. Cueboard does 
 2. Configure the OAuth consent screen and audience. Add test users if your app is in testing.
 3. Create an OAuth client of type **Web application**.
 4. Add the exact deployment origin to **Authorized JavaScript origins**.
-5. Select **My channel + analytics** in Cueboard and enter your client ID.
+5. Select **My channel + analytics** in Slateory and enter your client ID.
 6. Choose **Connect Google**, then select the account or brand channel that owns your channel.
 7. Add a YouTube video URL or ID to an idea and refresh YouTube to load its report.
 
@@ -156,7 +156,7 @@ https://abhishek325.github.io
 
 Origins do not include the repository path.
 
-Cueboard requests only:
+Slateory requests only:
 
 ```text
 youtube.readonly
@@ -165,7 +165,7 @@ yt-analytics.readonly
 
 The browser popup flow does not use a client secret or a server redirect endpoint. The client ID is public configuration.
 
-YouTube settings, remembered API keys and cached results are separate for each Cueboard project. Appearance is shared across projects. Google tokens and session-only API keys stay in memory and are cleared when switching projects. Reconnect after switching projects, a reload or token expiry to refresh private reports. A publicly distributed OAuth application may require Google verification; Cueboard does not provide a verified shared OAuth app.
+YouTube settings, remembered API keys and cached results are separate for each Slateory project. Appearance is shared across projects. Google tokens and session-only API keys stay in memory and are cleared when switching projects. Reconnect after switching projects, a reload or token expiry to refresh private reports. A publicly distributed OAuth application may require Google verification; Slateory does not provide a verified shared OAuth app.
 
 ### Reading the results
 
@@ -180,7 +180,7 @@ YouTube settings, remembered API keys and cached results are separate for each C
 <details>
 <summary><strong>Storage, backups and privacy</strong></summary>
 
-Cueboard uses the Dexie database **`content-board`**.
+Slateory uses the Dexie database **`content-board`**.
 
 | Table | Purpose |
 | --- | --- |
@@ -215,9 +215,9 @@ YouTube snapshots are cached locally for up to 30 days. Refresh replaces the sav
 
 You can also remove access through [Google Account connections](https://myaccount.google.com/connections).
 
-No Cueboard application server receives your board or reports. Hosting providers handle page requests; Google receives API and sign-in requests. Calendar previews can load thumbnails from Google.
+No Slateory application server receives your board or reports. Hosting providers handle page requests; Google receives API and sign-in requests. Calendar previews can load thumbnails from Google.
 
-Read the [privacy and data-use page](https://abhishek325.github.io/Cueboard/privacy/) for more information.
+Read the [privacy and data-use page](https://abhishek325.github.io/Slateory/privacy/) for more information.
 
 </details>
 
@@ -292,7 +292,7 @@ Private-repository Pages availability depends on your GitHub plan. Standard Page
 <details>
 <summary><strong>Search and AI discovery</strong></summary>
 
-Cueboard includes:
+Slateory includes:
 
 - Static About, Getting started and Privacy pages.
 - Page titles, descriptions and canonical URLs.
@@ -307,12 +307,12 @@ For another deployment, update `SITE_URL` and verify the site in Google Search C
 The current sitemap is:
 
 ```text
-https://abhishek325.github.io/Cueboard/sitemap.xml
+https://abhishek325.github.io/Slateory/sitemap.xml
 ```
 
 Search Console and Bing verification are not created by the application. No advertising or visitor-analytics tracker is included.
 
-Crawlers read `robots.txt` at the domain root. A project hosted at `/Cueboard/` cannot control that root file through a project-path `robots.txt`.
+Crawlers read `robots.txt` at the domain root. A project hosted at `/Slateory/` cannot control that root file through a project-path `robots.txt`.
 
 Metadata, structured data and `llms.txt` do not guarantee indexing, rankings or AI citations. `llms.txt` is optional documentation, not a crawler-permission setting.
 
@@ -320,6 +320,6 @@ Metadata, structured data and `llms.txt` do not guarantee indexing, rankings or 
 
 ## Feedback welcome
 
-Missing something that would make your content planning easier? [Open an issue](https://github.com/Abhishek325/Cueboard/issues).
+Missing something that would make your content planning easier? [Open an issue](https://github.com/Abhishek325/Slateory/issues).
 
-If Cueboard helps you turn ideas into finished work, give the repository a ⭐.
+If Slateory helps you turn ideas into finished work, give the repository a ⭐.
