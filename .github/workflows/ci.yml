@@ -20,6 +20,6 @@ jobs:
       - run: npm run package
       - uses: actions/upload-artifact@v7
         with:
-          name: cueboard-packages
+          name: slateory-packages
           path: release/
           if-no-files-found: error
