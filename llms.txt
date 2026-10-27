@@ -1,22 +1,22 @@
-# Cueboard
+# Slateory
 
 > A free, browser-local content planner for individual YouTube and Instagram creators.
 
-Plan video ideas by editable themes, track progress and keep completed work below a shared divider. Optional YouTube integration adds a posting calendar and read-only video metrics. Planning requires no Cueboard account or API key.
+Plan video ideas by editable themes, track progress and keep completed work below a shared divider. Optional YouTube integration adds a posting calendar and read-only video metrics. Planning requires no Slateory account or API key.
 
 ## Pages
-- [Content board](https://abhishek325.github.io/Cueboard/): Planner with a small About link and product-information dialog.
-- [About Cueboard](https://abhishek325.github.io/Cueboard/about/): Features and common questions, readable without JavaScript.
-- [Getting started](https://abhishek325.github.io/Cueboard/guide/): Themes, idea details, progress, backups and optional YouTube setup.
-- [Privacy and data](https://abhishek325.github.io/Cueboard/privacy/): Browser storage, backup contents, Google permissions and deletion.
-- [Source and setup](https://github.com/Abhishek325/Cueboard): Vue, Dexie, Vite, testing and deployment documentation.
+- [Content board](https://abhishek325.github.io/Slateory/): Planner with a small About link and product-information dialog.
+- [About Slateory](https://abhishek325.github.io/Slateory/about/): Features and common questions, readable without JavaScript.
+- [Getting started](https://abhishek325.github.io/Slateory/guide/): Themes, idea details, progress, backups and optional YouTube setup.
+- [Privacy and data](https://abhishek325.github.io/Slateory/privacy/): Browser storage, backup contents, Google permissions and deletion.
+- [Source and setup](https://github.com/Abhishek325/Slateory): Vue, Dexie, Vite, testing and deployment documentation.
 
 ## Product facts
-- Themes, ideas and progress are stored in this browser's IndexedDB, not a Cueboard server.
+- Themes, ideas and progress are stored in this browser's IndexedDB, not a Slateory server.
 - Export/restore JSON to move boards. No automatic device sync or cloud backup.
 - Board exports exclude credentials and fetched analytics.
 - Public YouTube data requires the visitor's own API key. Private analytics and scheduled uploads require their own OAuth client and owner sign-in. Access is read-only.
-- Cueboard does not upload, publish, schedule videos or connect to Instagram's API.
+- Slateory does not upload, publish, schedule videos or connect to Instagram's API.
 - The planner is free; Google API usage is subject to Google's quotas and terms.
 
 This summary is optional documentation, not a crawler permission file or a guarantee of AI-search inclusion. Personal browser data is not served in the site's public HTML.
