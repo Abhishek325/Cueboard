@@ -1,0 +1,38 @@
+name: Bug report
+description: Report something that does not work as expected.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Use fictional examples. Do not attach API keys, tokens, personal backups, private analytics or identifying screenshots."
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Explain what you expected and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the smallest repeatable example using fictional data.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and device
+      placeholder: "Chrome on Android, Safari on macOS, etc."
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Where did it happen?
+      options:
+        - Hosted Slateory
+        - Local development
+        - Self-hosted copy
+    validations:
+      required: true

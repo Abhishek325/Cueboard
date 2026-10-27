@@ -2,6 +2,7 @@ import { ref, computed, onScopeDispose } from 'vue';
 import { liveQuery } from 'dexie';
 import { repository } from '../services/database.js';
 import { normalize, removeDemo, deleteTheme, colors } from '../lib/board.js';
+import { appendIdeas } from '../lib/bulk-ideas.js';
 import { reorderTheme, reorderIdea } from '../lib/reorder.js';
 
 export function useBoard(repo = repository) {
@@ -55,6 +56,7 @@ export function useBoard(repo = repository) {
   }
   onScopeDispose(() => { disposed = true; subscription?.unsubscribe(); clearTimeout(timer); });
   return { board, loading, busy, error, message, undo, start, notify, saveTheme, saveIdea, undoLast,
+    importIdeas: payload => change(b => appendIdeas(b, payload), 'Ideas imported.'),
     reorderTheme: (id, targetId, after) => change(b => reorderTheme(b, id, targetId, after), 'Theme order saved.'),
     reorderIdea: (id, targetId, after) => change(b => reorderIdea(b, id, targetId, after), 'Idea order saved.'),
     hasDemo: computed(() => board.value.themes.some(t => t.isDemo) || board.value.ideas.some(i => i.isDemo)),

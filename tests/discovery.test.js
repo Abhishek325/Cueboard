@@ -52,3 +52,30 @@ test('a different deployment URL changes canonical, schema, sitemap and preview 
   expect(discoveryFiles(base)['sitemap.xml']).toContain(base + 'guide/');
   for (const url of ['http://example.com/', 'https://user:password@example.com/', 'https://example.com/?secret=1', 'https://example.com/#/']) expect(() => siteUrl(url)).toThrow();
 });
+
+test('template pages have real examples, working nested links and explicit app-preview links', () => {
+  const files = discoveryFiles();
+  expect(JSON.stringify(files)).not.toMatch(/cueboard/i);
+  const directory = parseHtml(files['templates/index.html']);
+  expect(directory.querySelector('a[href="educational-shorts/"]')).not.toBeNull();
+  for (const page of pages.filter(page => page.templateId)) {
+    const doc = parseHtml(files[page.path + 'index.html']);
+    expect(doc.querySelectorAll('article')).toHaveLength(4);
+    expect(files[page.path + 'index.html']).toContain('href="../../site.css"');
+    const button = doc.querySelector('.site-button');
+    expect(button.getAttribute('href')).toBe('../../#/?template=' + page.templateId);
+    expect(doc.querySelector('nav a[href="../../templates/"]')).not.toBeNull();
+    expect(doc.querySelector('main').textContent).toContain('before anything is saved');
+  }
+});
+test('verification tags are optional, build-configured and present in home and static documents', () => {
+  const verification = { google: 'example-public-google-token', bing: 'EXAMPLE_BING_TOKEN' };
+  const files = discoveryFiles(undefined, verification);
+  const doc = parseHtml(files['templates/travel-content/index.html']);
+  expect(doc.querySelector('meta[name="google-site-verification"]').content).toBe(verification.google);
+  expect(doc.querySelector('meta[name="msvalidate.01"]').content).toBe(verification.bing);
+  const html = discoveryPlugin({ googleVerification: verification.google, bingVerification: verification.bing }).transformIndexHtml.handler(readFileSync(resolve('index.html'), 'utf8'));
+  expect(parseHtml(html).querySelector('meta[name="google-site-verification"]').content).toBe(verification.google);
+  expect(metadata()).not.toContain('google-site-verification');
+  expect(() => metadata(undefined, undefined, { google: '<meta content="bad">' })).toThrow('only the verification token');
+});

@@ -1,6 +1,7 @@
 import { createRepository, repository } from './database.js';
+import { boardFromTemplate } from '../data/templates.js';
 export const DEFAULT_PROJECT = { id: 'default', name: 'Content board', createdAt: '1970-01-01T00:00:00.000Z' };
-export function createProjectStore(root = repository) {
+export function createProjectStore(root = repository, { repositoryFactory = createRepository } = {}) {
   const repositories = new Map([['default', root]]);
   async function initialize() {
     await root.open();
@@ -41,8 +42,30 @@ export function createProjectStore(root = repository) {
   }
   function forProject(id) {
     if (id !== 'default' && !/^project-[\w-]{1,100}$/.test(id)) throw Error('Invalid project.');
-    if (!repositories.has(id)) repositories.set(id, createRepository({ name: root.db.name + '-' + id, legacyStorage: null, seedDemo: false }));
+    if (!repositories.has(id)) repositories.set(id, repositoryFactory({ name: root.db.name + '-' + id, legacyStorage: null, seedDemo: false }));
     return repositories.get(id);
+  }
+  async function createFromTemplate(templateId, rawName) {
+    const name = cleanName(rawName), board = boardFromTemplate(templateId);
+    const project = { id: 'project-' + crypto.randomUUID(), name, createdAt: new Date().toISOString() };
+    const target = forProject(project.id);
+    try {
+      // Prepare the entire scoped board before exposing it in the project list.
+      // Databases cannot share a transaction: failed registration deletes this new database.
+      await target.open();
+      await target.update(() => board);
+      await root.db.transaction('rw', root.db.projects, async () => {
+        const projects = await list();
+        if (projects.length >= 50) throw Error('You can create up to 50 projects.');
+        if (projects.some(p => p.name.toLowerCase() === name.toLowerCase())) throw Error('A project with that name already exists.');
+        await root.db.projects.add(project);
+      });
+      return project;
+    } catch (error) {
+      target.close();
+      try { await target.db.delete(); } finally { repositories.delete(project.id); }
+      throw error;
+    }
   }
   async function remove(id) {
     if (!await root.db.projects.get(id)) throw Error('That project is unavailable.');
@@ -69,7 +92,7 @@ export function createProjectStore(root = repository) {
     });
     return next;
   }
-  return { initialize, list, current, select, forProject, remove, create: name => saveName(name), rename: (id, name) => saveName(name, id),
+  return { initialize, list, current, select, forProject, remove, createFromTemplate, create: name => saveName(name), rename: (id, name) => saveName(name, id),
     close() { for (const [id, repo] of repositories) if (id !== 'default') repo.close(); },
   };
 }

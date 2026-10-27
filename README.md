@@ -1,12 +1,14 @@
 # 🎬 Slateory
 
+[![CI](https://github.com/Abhishek325/Slateory/actions/workflows/ci.yml/badge.svg)](https://github.com/Abhishek325/Slateory/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 ### Less hunting for ideas. More making them.
 
 A simple workspace for planning YouTube videos, Shorts and Instagram Reels.
 
 Group ideas by theme, keep your current work visible, and see what you’ve already finished—all on one board.
 
-**[Open Slateory →](https://abhishek325.github.io/Slateory/)** · [Getting started](https://abhishek325.github.io/Slateory/guide/) · [Privacy](https://abhishek325.github.io/Slateory/privacy/)
+**[Open Slateory →](https://abhishek325.github.io/Slateory/)** · [Starter templates](https://abhishek325.github.io/Slateory/templates/) · [Getting started](https://abhishek325.github.io/Slateory/guide/) · [Privacy](https://abhishek325.github.io/Slateory/privacy/)
 
 ## 💡 From “I should make this” to “Published”
 
@@ -24,6 +26,8 @@ Completed work stays accessible without crowding your next ideas. See two comple
 
 - **Separate projects.** Switch boards from the left dropdown. Each project has its own themes, ideas and YouTube setup.
 - **Your themes, your ideas.** Create buckets that match what you make.
+- **Start with a template.** Educational Shorts, building in public and travel starters each create a separate editable project.
+- **Bring your own agent.** Copy project instructions and selected cards for a browser-capable agent. [See how it works](docs/AGENT-GUIDE.md).
 - **More than a title.** Add the demonstration, viewer value, notes and format.
 - **A clear next step.** In-progress cards appear first within each theme.
 - **Find ideas quickly.** Search your board or filter to one or several themes.
@@ -42,6 +46,8 @@ Slateory is a planning workspace. You publish through YouTube or Instagram yours
 5. Mark it **Complete** when you’re done.
 
 YouTube setup is optional. Start planning immediately.
+
+For a head start, choose **Use a template…** from the project dropdown, or **Use a template** on an empty board. Preview Educational Shorts, Building in public or Travel content, name the new project and choose **Use this template**. Each starts with three themes and four editable ideas. Your current project stays unchanged, and YouTube setup starts empty.
 
 Use the project dropdown on the left to create or switch projects. Rename with the pencil beside the page heading; press Enter or click away to save automatically. The trash icon beside the heading deletes a project after confirmation. Your existing board stays in **Content board**; new projects start empty. Slateory remembers your last project on this browser. Deleting the last project leaves a fresh empty board; appearance preferences stay unchanged.
 
@@ -317,6 +323,12 @@ Crawlers read `robots.txt` at the domain root. A project hosted at `/Slateory/` 
 Metadata, structured data and `llms.txt` do not guarantee indexing, rankings or AI citations. `llms.txt` is optional documentation, not a crawler-permission setting.
 
 </details>
+
+## Help shape Slateory
+
+Bug reports, useful templates, documentation and accessibility improvements are welcome. Read the [contribution guide](CONTRIBUTING.md) and [roadmap](ROADMAP.md) to find a focused place to start.
+
+Slateory is available under the [MIT license](LICENSE). For search verification and repository discovery settings, see the [setup checklist](docs/DISCOVERY-SETUP.md).
 
 ## Feedback welcome
 

@@ -1,0 +1,33 @@
+.agent-panel { display: grid; gap: 12px; }
+.agent-intro { font-size: 21px; letter-spacing: -.5px; margin: 0; }
+.agent-project { margin: 3px 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.agent-panel > label { font-size: 12px; margin-bottom: -5px; }
+.agent-panel select, .agent-panel textarea { min-width: 0; width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); color: var(--ink); font-size: 12px; line-height: 1.6; }
+.agent-panel textarea { resize: vertical; }
+.agent-panel details { border-top: 1px solid var(--line); padding-top: 12px; font-size: 12px; }
+.agent-panel summary { cursor: pointer; }
+.agent-context p { color: var(--muted); line-height: 1.6; font-size: 11px; }
+.agent-card-options { max-height: 180px; overflow: auto; display: grid; gap: 5px; }
+.agent-card-options label { display: flex; gap: 10px; align-items: flex-start; padding: 7px 2px; overflow-wrap: anywhere; }
+.agent-card-options input { flex: none; margin-top: 3px; accent-color: var(--muted); }
+.agent-card-options small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+.agent-preview textarea { margin-top: 12px; font-family: ui-monospace, monospace; font-size: 11px; }
+.agent-feedback { min-height: 1.6em; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.agent-footer { justify-content: flex-end; }
+
+/* Keep the agent entry centered independently of the surrounding controls. */
+.topbar.has-agent-action { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 18px; }
+.has-agent-action .breadcrumb { min-width: 0; }
+.has-agent-action .breadcrumb .current { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.has-agent-action .topbar-actions { justify-self: end; }
+.agent-open { display: inline-flex; align-items: center; justify-content: center; gap: 8px; justify-self: center; padding: 7px 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--ink); font-size: 12px; white-space: nowrap; }
+.agent-open svg { width: 17px; height: 17px; color: var(--muted); }
+.agent-open:hover:not(:disabled) { background: color-mix(in srgb, var(--accent) 14%, var(--paper)); border-color: var(--muted); }
+.agent-open:disabled { opacity: .5; cursor: default; }
+@media (max-width: 1000px) {
+  .topbar.has-agent-action { height: auto; min-height: 62px; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+  .has-agent-action .topbar-actions { grid-column: 2; grid-row: 1; }
+  .has-agent-action .agent-open { grid-column: 1 / -1; grid-row: 2; }
+}
+
+.agent-open:focus-visible { outline-color: var(--muted); }

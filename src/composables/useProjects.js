@@ -64,6 +64,20 @@ export function useProjects(store = createProjectStore()) {
     } catch (e) { if (!disposed) { error.value = 'Could not delete project. ' + e.message; projectRepository.value = previous; } return false; }
     finally { if (!disposed) busy.value = false; }
   }
+  async function useTemplate(templateId, name) {
+    if (busy.value) return false;
+    busy.value = true; error.value = '';
+    try {
+      const project = await store.createFromTemplate(templateId, name);
+      const repo = store.forProject(project.id);
+      await store.select(project.id);
+      const all = await store.list();
+      if (disposed) return false;
+      projects.value = all; activeId.value = project.id; projectRepository.value = repo;
+      return true;
+    } catch (e) { if (!disposed) error.value = e.message; return false; }
+    finally { if (!disposed) busy.value = false; }
+  }
   onScopeDispose(() => { disposed = true; subscription?.unsubscribe(); store.close(); });
-  return { projects, activeId, active, projectRepository, loading, busy, error, start, switchProject, save, remove };
+  return { projects, activeId, active, projectRepository, loading, busy, error, start, switchProject, save, remove, useTemplate };
 }

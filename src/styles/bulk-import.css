@@ -1,0 +1,18 @@
+.bulk-import { display: grid; gap: 12px; padding: 22px 26px; }
+.bulk-import textarea, .bulk-import input, .bulk-import select { padding: 9px 10px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); width: 100%; }
+.bulk-import .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 8px; }
+.bulk-import > p { margin: 0; color: var(--muted); line-height: 1.6; }
+.bulk-import label { display: grid; gap: 7px; }
+.bulk-import textarea { min-height: 150px; resize: vertical; width: 100%; }
+.bulk-import-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bulk-import-help { font-size: 12px; }
+.bulk-preview { border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+.bulk-preview ol { padding-left: 22px; max-height: 230px; overflow-y: auto; }
+.bulk-preview li { padding: 7px 4px; overflow-wrap: anywhere; }
+.bulk-preview small { display: block; color: var(--muted); font-size: 11px; }
+.bulk-row-duplicate { opacity: .65; }
+.bulk-preview [role=alert], .bulk-row-error small { color: var(--danger, #b54535); }
+@media(max-width: 520px) { .bulk-import-options { grid-template-columns: 1fr; } }
+.bulk-import input, .bulk-import select { min-width: 0; color: var(--ink); }
+.bulk-import textarea { color: var(--ink); font-size: 13px; line-height: 1.6; }
+.bulk-import > [role=alert] { color: var(--danger, #b54535); }

@@ -1,0 +1,25 @@
+name: Workflow or feature request
+description: Explain a recurring planning problem and your current workaround.
+title: "[Workflow]: "
+body:
+  - type: textarea
+    id: workflow
+    attributes:
+      label: What are you trying to do?
+      description: Describe your creator workflow and when the problem happens.
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How do you handle it today?
+      description: Mention your current workaround and why it is inconvenient.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What would a useful result look like?
+      description: A concrete outcome helps more than a list of features. Do not include personal data.
+    validations:
+      required: true

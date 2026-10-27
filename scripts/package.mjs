@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { zipSync } from 'fflate';
 const root = fileURLToPath(new URL('../', import.meta.url));
-const source = ['src', 'site', 'public', 'tests', 'scripts', '.github', 'index.html', 'package.json', 'package-lock.json', 'vite.config.js', 'vitest.config.js', '.gitignore', '.nvmrc', 'README.md'];
+const source = ['src', 'site', 'public', 'tests', 'scripts', '.github', 'index.html', 'package.json', 'package-lock.json', 'vite.config.js', 'vitest.config.js', '.gitignore', '.nvmrc', 'README.md', 'LICENSE', 'CONTRIBUTING.md', 'ROADMAP.md', 'docs', '.env.example'];
 const credential = /AIza[\w-]{30,}|ya29\.[\w-]{20,}|-----BEGIN (?:RSA |EC )?PRIVATE KEY-----/;
 async function collect(paths) {
   const out = {};
