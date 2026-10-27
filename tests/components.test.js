@@ -25,7 +25,9 @@ test('Vue board creates content, removes only samples, persists progress and sup
     expect(scrollArea.find('.summary-line').exists()).toBe(false);
     expect(scrollArea.find('.done-grid').exists()).toBe(true);
 
-    expect(wrapper.get('.topbar-actions [data-about-open]').text()).toBe('About Slateory');
+    expect(wrapper.find('.topbar-actions [data-about-open]').exists()).toBe(false);
+    expect(wrapper.get('.board-footnote [data-about-open]').text()).toBe('About');
+    expect(wrapper.findAll('.board-info-links a').map(link => link.text())).toEqual(['About', 'Getting started']);
     expect(wrapper.find('.sidebar .theme-nav').exists()).toBe(false);
     await wrapper.get('[aria-label="Filter themes"]').trigger('click');
     await wrapper.get('button[aria-label="New theme"]').trigger('click'); await wrapper.get('#theme-name').setValue('My custom theme'); await wrapper.findComponent(ThemeEditor).get('form').trigger('submit');
@@ -38,9 +40,15 @@ test('Vue board creates content, removes only samples, persists progress and sup
     await button(wrapper, 'Start empty').trigger('click'); await wrapper.get('dialog[aria-label="Remove demo data"] .btn-primary').trigger('click');
     await vi.waitFor(() => expect(wrapper.findAll('.idea-card')).toHaveLength(1)); expect(wrapper.find('.idea-card').attributes('data-status')).toBe('progress');
     expect((await repository.readBoard()).ideas[0].title).toBe('An original idea'); expect(wrapper.text()).not.toContain('Sample:');
+    expect(wrapper.get('.done-divider button').attributes('aria-expanded')).toBe('false');
+    expect(wrapper.find('.done-grid').exists()).toBe(false);
+    await button(wrapper, 'Show').trigger('click');
+    expect(wrapper.find('.done-grid').exists()).toBe(true);
+    await button(wrapper, 'Hide').trigger('click');
     await wrapper.get('button[aria-label="Mark complete: An original idea"]').trigger('click');
     await vi.waitFor(() => expect(wrapper.find('.done-grid .idea-card').exists()).toBe(true));
     await button(wrapper, 'Undo').trigger('click'); await vi.waitFor(() => expect(wrapper.find('.active-grid .idea-card').attributes('data-status')).toBe('progress'));
+    expect(wrapper.find('.done-grid').exists()).toBe(false);
     await wrapper.get('[aria-label="YouTube setup"]').trigger('click'); expect(wrapper.get('#yt-api-key').attributes('type')).toBe('password');
     await wrapper.get('#yt-mode').setValue('owner'); expect(wrapper.find('#yt-client').exists()).toBe(true); expect(wrapper.find('#yt-api-key').exists()).toBe(false);
     await wrapper.get('dialog[aria-label="YouTube setup"] button[aria-label="Close dialog"]').trigger('click');

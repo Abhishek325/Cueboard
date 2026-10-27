@@ -26,7 +26,7 @@ let workspaceAlive = true;
 const boardScroller = ref(null);
 const { canScrollLeft, canScrollRight, scroll: scrollThemes } = useScrollEdges(boardScroller);
 const b = useBoard(props.repo), y = useYoutube(() => b.board.value.ideas, props.repo);
-const selectedThemes = ref(null), query = ref(''), showDone = ref(true), sidebar = ref(false), ideaOpen = ref(false), themeOpen = ref(false), ytOpen = ref(false);
+const selectedThemes = ref(null), query = ref(''), showDone = ref(false), sidebar = ref(false), ideaOpen = ref(false), themeOpen = ref(false), ytOpen = ref(false);
 const bulkOpen = ref(false), agentOpen = ref(false);
 const editingIdea = ref(null), editingTheme = ref(null), newThemeId = ref(''), confirmation = ref(null), search = ref(null), doneDivider = ref(null), importFile = ref(null);
 const board = b.board, loading = b.loading, busy = b.busy, error = b.error, message = b.message;
@@ -38,6 +38,10 @@ watch(() => board.value.themes, values => {
 });
 const hasIdeas = computed(() => board.value.ideas.length > 0);
 const completed = computed(() => board.value.ideas.filter(i => i.status === 'done').length);
+watch(completed, (count, previous) => {
+  if (!count) showDone.value = false;
+  else if (!previous) showDone.value = true;
+});
 const allCompleted = ref(false);
 const searching = computed(() => !!query.value.trim());
 const completedOverflow = computed(() => themes.value.reduce((count, t) => count + Math.max(0, items(t.id, true).length - 2), 0));
@@ -120,7 +124,7 @@ onUnmounted(() => { workspaceAlive = false; document.removeEventListener('keydow
   <aside class="sidebar" :class="{ 'is-open': sidebar }" aria-label="Workspace navigation"><div class="workspace"><span class="workspace-mark" aria-hidden="true">S</span><div>Slateory<div class="workspace-sub">Creator workspace</div></div></div><nav aria-label="Projects"><ProjectSwitcher :projects="projects || [currentProject]" :active-id="currentProject.id" :count="board.ideas.length" :disabled="loading || busy || projectBusy" @switch="$emit('switch-project', $event)" @create="$emit('create-project')" @template="$emit('choose-template')" /></nav>
   <PostingCalendar v-if="!loading && hasIdeas" :cache="y.cache.value" :busy="y.busy.value" @setup="ytOpen = true" @refresh="y.ready.value ? y.refresh() : ytOpen = true" />
   <div class="sidebar-footer"><p>Your progress stays on this device.<br>Export a backup to keep a copy.</p><button class="restore-button" :disabled="loading || busy" @click="importFile.click()">Restore a backup</button><input ref="importFile" class="visually-hidden" type="file" accept=".json,application/json" aria-label="Choose a board backup" @change="restore"></div></aside>
-  <main class="main"><header class="topbar has-agent-action"><div class="breadcrumb"><button class="mobile-menu" aria-label="Open workspace navigation" @click="sidebar = true"><AppIcon name="menu" /></button><span>Workspace</span><span class="slash">/</span><span class="current">{{ currentProject.name }}</span></div><button type="button" class="agent-open" :disabled="loading || !!error || projectBusy" aria-haspopup="dialog" @click="agentOpen = true"><AppIcon name="agent" />Use with an agent</button><div class="topbar-actions"><a class="about-link" href="./about/" data-about-open aria-haspopup="dialog" aria-controls="slateory-about">About Slateory</a><label class="appearance-control"><AppIcon name="appearance" /><span class="visually-hidden">Appearance</span><select :value="appearance.preference.value" @change="setAppearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label></div></header>
+  <main class="main"><header class="topbar has-agent-action"><div class="breadcrumb"><button class="mobile-menu" aria-label="Open workspace navigation" @click="sidebar = true"><AppIcon name="menu" /></button><span>Workspace</span><span class="slash">/</span><span class="current">{{ currentProject.name }}</span></div><button type="button" class="agent-open" :disabled="loading || !!error || projectBusy" aria-haspopup="dialog" @click="agentOpen = true"><AppIcon name="agent" />Use with an agent</button><div class="topbar-actions"><label class="appearance-control"><AppIcon name="appearance" /><span class="visually-hidden">Appearance</span><select :value="appearance.preference.value" @change="setAppearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label></div></header>
   <div class="page"><section class="page-heading"><div><ProjectHeading :name="currentProject.name" :disabled="projectBusy || loading || busy" @rename="$emit('rename-project', $event)" @delete="$emit('delete-project')" /><p class="intro">A home for every theme, the next idea, and everything already made.</p></div><div class="heading-actions"><button v-if="!loading && (board.themes.length || hasIdeas)" class="btn btn-quiet" @click="download"><AppIcon name="export" />Export backup</button><button class="btn btn-primary" :disabled="loading || busy || !!error" @click="openIdea()"><AppIcon name="plus" />New idea</button></div></section>
   <p v-if="projectError" class="project-error" role="alert">{{ projectError }}</p>
   <p v-if="loading" role="status">Opening your board...</p><div v-if="error" class="save-error is-visible" role="alert">{{ error }} <button @click="start">Retry storage</button></div>
@@ -139,7 +143,7 @@ onUnmounted(() => { workspaceAlive = false; document.removeEventListener('keydow
         <div class="column"><IdeaCard v-for="i in items(t.id)" :key="i.id" :class="dropClass('idea', i.id)" :idea="i" :cache="y.cache.value" :disabled="busy" :can-previous="canMoveIdea(i, -1)" :can-next="canMoveIdea(i, 1)" @reorder-start="startDrag('idea', i.id, $event)" @reorder-end="clearDrag" @move="moveIdea(i, $event)" @dragover="over('idea', i, $event)" @drop="drop('idea', i, $event)" @open="openIdea" @toggle="b.toggle" /><div v-if="!items(t.id).length" class="empty-column"><strong>{{ query ? 'No matching ideas' : 'A little room for what comes next.' }}</strong>{{ query ? 'Try a different search.' : 'Your next idea can start here.' }}</div><button class="add-card" :disabled="busy" @click="openIdea(null, t.id)"><AppIcon name="plus" />Add an idea</button></div>
       </section>
     </div>
-    <div ref="doneDivider" class="done-divider"><AppIcon name="check" /><span class="done-label">Completed</span><span class="done-count">{{ completed }}</span><span class="done-copy">Finished ideas live down here.</span><button :aria-expanded="showDone" @click="showDone = !showDone">{{ showDone ? 'Hide' : 'Show' }}<AppIcon name="chevron" /></button></div>
+    <div ref="doneDivider" class="done-divider"><AppIcon name="check" /><span class="done-label">Completed</span><span class="done-count">{{ completed }}</span><span class="done-copy">Finished ideas live down here.</span><button aria-controls="completed-ideas" :aria-expanded="showDone" @click="showDone = !showDone">{{ showDone ? 'Hide' : 'Show' }}<AppIcon name="chevron" /></button></div>
     <div v-if="showDone" id="completed-ideas" class="theme-row done-grid" aria-label="Completed ideas">
       <section v-for="t in themes" :key="t.id" class="theme-section" :data-theme="t.id" :aria-label="t.name + ' completed ideas'">
         <h3 class="completed-theme-name"><span class="theme-dot" :style="{ '--dot': t.color }"></span>{{ t.name }}</h3>
@@ -152,7 +156,7 @@ onUnmounted(() => { workspaceAlive = false; document.removeEventListener('keydow
   </div>
   <div v-if="showDone && !searching && completedOverflow" class="completed-more"><button class="btn completed-more-button" aria-controls="completed-ideas" :aria-expanded="allCompleted" @click="allCompleted = !allCompleted">{{ allCompleted ? 'Show fewer completed' : 'View all completed' }}<span v-if="!allCompleted" class="completed-more-count">{{ completedOverflow }} more</span><AppIcon name="chevron" /></button></div>
   </section>
-  <footer class="board-footnote"><span><AppIcon name="check" />Check a card to move it below the divider. Click a card for details.</span><a href="./guide/" class="board-guide">Getting started</a></footer></template></div></main>
+  <footer class="board-footnote"><span><AppIcon name="check" />Check a card to move it below the divider. Click a card for details.</span><nav class="board-info-links" aria-label="Board help"><a class="board-guide" href="./about/" data-about-open aria-haspopup="dialog" aria-controls="slateory-about">About</a><a href="./guide/" class="board-guide">Getting started</a></nav></footer></template></div></main>
   <AgentInstructions :open="agentOpen" :project="currentProject" :board="board" @close="agentOpen = false" />
   <BulkIdeaImport :open="bulkOpen" :themes="board.themes" :ideas="board.ideas" :theme-id="themes[0]?.id || ''" :project-name="currentProject.name" :busy="busy" :error="error" @close="!busy && (bulkOpen = false)" @import="importIdeas" />
   <IdeaEditor :open="ideaOpen" :idea="editingIdea" :theme-id="newThemeId" :themes="board.themes" :busy="busy" :cache="y.cache.value" :stamp="y.stamp.value" @close="ideaOpen = false" @save="saveIdea" @delete="deleteIdea" />
