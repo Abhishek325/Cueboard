@@ -5,7 +5,7 @@ const CHANNEL = 'UC' + 'a'.repeat(22), OTHER = 'UC' + 'b'.repeat(22), VIDEO = 'd
 function fakeApi({ mismatch = false, denied = false } = {}) {
   const fetcher = vi.fn(async (url) => {
     if (denied) return { ok: false, status: 403 };
-    const u = new URL(url), channel = { id: CHANNEL, snippet: { title: 'Test channel' }, contentDetails: { relatedPlaylists: { uploads: 'test-uploads' } } }; let data;
+    const u = new URL(url), channel = { id: CHANNEL, snippet: { title: 'Test channel', thumbnails: { high: { url: 'https://yt3.googleusercontent.com/test-logo' } } }, brandingSettings: { image: { bannerExternalUrl: 'https://yt3.googleusercontent.com/test-banner' } }, contentDetails: { relatedPlaylists: { uploads: 'test-uploads' } } }; let data;
     if (u.pathname.endsWith('/channels')) data = { items: [u.searchParams.has('mine') && mismatch ? { ...channel, id: OTHER } : channel] };
     else if (u.pathname.endsWith('/playlistItems')) data = { items: [VIDEO, 'demoVideo02'].map(videoId => ({ contentDetails: { videoId } })) };
     else if (u.pathname.endsWith('/videos')) data = { items: [{ id: VIDEO, snippet: { channelId: CHANNEL, title: 'Example', publishedAt: '2025-01-01T10:00:00Z' }, status: { privacyStatus: 'public' }, statistics: { viewCount: '123', likeCount: '4' } }, { id: 'demoVideo02', snippet: { channelId: CHANNEL, title: 'Scheduled example' }, status: { privacyStatus: 'private', publishAt: '2027-01-01T10:00:00Z' } }] };
@@ -18,11 +18,15 @@ test('channel and video parsing rejects unrelated sites', () => { expect(channel
 test('public key uses a header, filters private videos and leaves missing counts unknown', async () => {
   const { load, fetcher } = fakeApi(); const key = 'synthetic-key-not-a-credential';
   const result = await load({ config: { mode: 'public', channel: '@example', days: 28 }, auth: { apiKey: key } });
+  expect(result.channelLogoUrl).toBe('https://yt3.googleusercontent.com/test-logo');
+  expect(result.channelBannerUrl).toBe('https://yt3.googleusercontent.com/test-banner');
+  expect(new URL(fetcher.mock.calls[0][0]).searchParams.get('part')).toContain('brandingSettings');
   expect(result.mode).toBe('public'); expect(result.videos).toHaveLength(1); expect(result.reports[VIDEO]).toEqual({ views: 123, likes: 4, comments: null });
   for (const [url, options] of fetcher.mock.calls) { expect(url).not.toContain(key); expect(options.headers['X-Goog-Api-Key']).toBe(key); expect(options.headers.Authorization).toBeUndefined(); }
 });
 test('owner fetch checks channel membership, retains schedules and retrieves dated reports', async () => {
   const { load, fetcher } = fakeApi(); const result = await load({ config: { mode: 'owner', channel: '@example', days: 7 }, auth: { token: 'synthetic-token' }, ideas: [{ youtubeVideoId: VIDEO }] });
+  expect(result.channelBannerUrl).toBe('https://yt3.googleusercontent.com/test-banner');
   expect(result.videos).toHaveLength(2); expect(result.videos[1].publishAt).toBe('2027-01-01T10:00:00Z'); expect(result.reports[VIDEO].views).toBe(12); expect(result.start).toBeTruthy(); expect(result.end).toBeTruthy(); expect(result).not.toHaveProperty('token');
   expect(fetcher.mock.calls.every(([, o]) => o.headers.Authorization === 'Bearer synthetic-token')).toBe(true); expect(SCOPES.every(s => s.endsWith('.readonly'))).toBe(true);
 });

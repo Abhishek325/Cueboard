@@ -1,0 +1,8 @@
+.channel-banner { width: 100%; aspect-ratio: 6 / 1; max-height: 220px; min-height: 100px; overflow: hidden; border-radius: 10px; margin-bottom: 23px; background: var(--sidebar); }
+.channel-banner img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
+.channel-avatar { width: 48px; height: 48px; flex: none; overflow: hidden; border-radius: 50%; background: var(--sidebar); }
+.channel-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.project-heading-row:has(.channel-avatar) { gap: 12px; }
+.project-heading-row:has(.channel-avatar) h1 { margin-bottom: 0; }
+.project-heading-row:has(.channel-avatar) { margin-bottom: 10px; }
+@media(max-width: 720px) { .channel-banner { aspect-ratio: 4 / 1; min-height: 80px; border-radius: 7px; margin-bottom: 18px; } .channel-avatar { width: 38px; height: 38px; } }

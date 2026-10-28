@@ -74,6 +74,8 @@ Bring posting dates and performance context into your planning workspace.
 
 Scheduled uploads appear with a clock in the calendar. Public lifetime totals and private reports for a selected period are labelled separately.
 
+When YouTube returns channel artwork, its banner appears above the project heading and its logo sits beside the project name. Use the calendar refresh to fetch artwork for an existing connection; a page reload uses the saved snapshot. Missing or broken images stay hidden. Banner availability depends on YouTube’s branding response.
+
 **Slateory cannot upload, edit or delete your videos.** It does not currently connect to Instagram’s API.
 
 ---

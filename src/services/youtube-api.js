@@ -1,3 +1,4 @@
+import { channelBranding } from '../lib/channel-branding.js';
 import { videoId, channelLookup, metadata, range, report, METRICS } from '../lib/youtube.js';
 
 export function createYouTubeApi(fetcher = globalThis.fetch) {
@@ -24,8 +25,8 @@ export function createYouTubeApi(fetcher = globalThis.fetch) {
     if (!owner && (!query || !auth.apiKey)) throw Error('Enter an API key and a valid channel.');
     if (owner && !auth.token) throw Error('Connect Google first.');
     let expectedData, expected = '';
-    if (query) { expectedData = await request(base + 'channels', { part: 'snippet,contentDetails', ...query }); expected = expectedData.items?.[0]?.id || ''; if (!expected) throw Error('Channel not found. Check its ID or @handle.'); }
-    const mine = owner ? await request(base + 'channels', { part: 'snippet,contentDetails', mine: 'true' }) : null;
+    if (query) { expectedData = await request(base + 'channels', { part: 'snippet,contentDetails,brandingSettings', ...query }); expected = expectedData.items?.[0]?.id || ''; if (!expected) throw Error('Channel not found. Check its ID or @handle.'); }
+    const mine = owner ? await request(base + 'channels', { part: 'snippet,contentDetails,brandingSettings', mine: 'true' }) : null;
     const channel = owner ? (expected ? mine.items?.find(c => c.id === expected) : mine.items?.length === 1 ? mine.items[0] : null) : expectedData.items[0];
     if (!channel || !/^UC[\w-]{22}$/.test(channel.id)) throw Error('The Google selection does not match this channel. Select its owner/brand account, or specify the channel when multiple channels are available.');
     let ids = [], page = '', pages = 0;
@@ -57,6 +58,6 @@ export function createYouTubeApi(fetcher = globalThis.fetch) {
         const parsed = report(data); if (parsed) reports[id] = parsed;
       }
     }
-    return { mode: config.mode, channelTarget: config.channel, channelId: channel.id, channelTitle: String(channel.snippet?.title || 'YouTube channel'), fetchedAt: new Date().toISOString(), videos, reports, ...(owner ? { days: config.days, ...dates } : {}) };
+    return { mode: config.mode, channelTarget: config.channel, channelId: channel.id, channelTitle: String(channel.snippet?.title || 'YouTube channel'), ...channelBranding(channel), fetchedAt: new Date().toISOString(), videos, reports, ...(owner ? { days: config.days, ...dates } : {}) };
   };
 }
